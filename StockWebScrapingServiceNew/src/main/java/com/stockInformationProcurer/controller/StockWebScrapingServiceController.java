@@ -18,6 +18,8 @@ public class StockWebScrapingServiceController {
     @RequestMapping(value = "/getStockInformation")
     public ResponseEntity getStockInformation() {
         ProcureStockInformationService procureStockInformationService = new ProcureStockInformationService("demo", "MSFT");
+        procureStockInformationService.extractDataFromJson(procureStockInformationService.getStockInformation());
         return new ResponseEntity<>(procureStockInformationService.getStockInformation(), HttpStatus.OK);
     }
+
 }
