@@ -7,6 +7,19 @@
 	},
 	"item": [
 		{
+			"name": "StockWebScrapingService",
+			"item": [
+				{
+					"name": "Stock Web Scraping Test Stock Information Procurer",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Document Get Welcome",
 			"request": {
 				"method": "GET",
