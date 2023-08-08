@@ -5,6 +5,17 @@ networks:
     driver: bridge
 
 services:
+
+  mongodb:
+    image: mongo
+    container_name: stockinformations-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: 'stockinformations'
+    networks:
+      - ms-network
+
   document-service:
     build: ./DocumentService
     restart: on-failure
@@ -39,8 +50,8 @@ services:
     restart: on-failure
     ports:
       - "9040:9040"
-    #    depends_on:
-    #      - mongodb
+#    depends_on:
+#      - mongodb
     networks:
       - ms-network
 
