@@ -7,12 +7,15 @@ networks:
 services:
 
   mongodb:
-    image: mongo
-    container_name: stockinformations-mongodb
+    image: mongo:latest
+    container_name: mongodb
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: 'stockinformations'
+      MONGO_INITDB_DATABASE: stocks
+    volumes:
+      - mongodb_data:/data/db
+
     networks:
       - ms-network
 
@@ -45,13 +48,24 @@ services:
     networks:
       - ms-network
 
-  stock-web-scraping-service:
-    build: StockWebScrapingServiceNew
+#  stock-web-scraping-service:
+#    build: ./StockWebScrapingServiceNew
+#    restart: on-failure
+#    ports:
+#      - "9040:9040"
+##    depends_on:
+##      - mongodb
+#    networks:
+#      - ms-network
+
+
+  stock-web-scraping-service-py:
+    build: ./StockWebScrapingServicePython
     restart: on-failure
     ports:
       - "9040:9040"
-#    depends_on:
-#      - mongodb
+    #    depends_on:
+    #      - mongodb
     networks:
       - ms-network
 
@@ -65,3 +79,7 @@ services:
     #      - mongodb
     networks:
       - ms-network
+
+
+volumes:
+  mongodb_data:
