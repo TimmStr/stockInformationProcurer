@@ -13,7 +13,52 @@
 					"name": "Stock Web Scraping Test Stock Information Procurer",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": "http://localhost:9040/getStockInformation"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "StockWebScrapingServicePython",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:5000"
+					},
+					"response": []
+				},
+				{
+					"name": "Mongo Get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9040/testmongo_get"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Document Service",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:9040/testdocument"
+					},
+					"response": []
+				},
+				{
+					"name": "test Mongo Upload",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9040/testmongo_upload"
 					},
 					"response": []
 				}
@@ -24,7 +69,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://localhost:9010/get"
+				"url": "http://127.0.0.1:9010/get"
 			},
 			"response": []
 		},
