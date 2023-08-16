@@ -1,5 +1,5 @@
-import os
-
+import requests
+from bson.json_util import dumps
 from flask import Flask
 from flask_restful import Api
 from pymongo import MongoClient
@@ -7,6 +7,7 @@ from pymongo import MongoClient
 app = Flask(__name__)
 api = Api(app)
 app.config['JSON_SORT_KEYS'] = False
+print('version 6')
 
 
 @app.route('/get', methods=['GET'])
@@ -14,11 +15,12 @@ def get_test():
     return 'Successful'
 
 
-@app.route('/testmongo', methods=['GET'])
-def test_mongo():
+@app.route('/testmongo_upload', methods=['GET'])
+def test_mongo_upload():
     # Verbindung zur MongoDB-Datenbank herstellen
-    client = MongoClient("mongodb://localhost:27017/")
+    client = MongoClient("mongodb://mongodb:27017/")
     db = client["stockinformations"]
+
     collection = db["stocks"]
 
     # Beispiel-Daten zum Einfügen
@@ -30,9 +32,34 @@ def test_mongo():
 
     # Daten in die Datenbank einfügen
     for entry in data_to_insert:
+        print(entry)
         collection.insert_one(entry)
 
     return "Daten erfolgreich eingefügt."
+
+
+@app.route('/testmongo_get', methods=['GET'])
+def test_mongo_get():
+    print('Get Test:')
+    # Verbindung zur MongoDB-Datenbank herstellen
+    # client = MongoClient("mongodb://mongodb/")
+    client = MongoClient("mongodb://mongodb:27017/")
+    db = client["stockinformations"]
+
+    collection = db["stocks"]
+    entries = collection.find()
+    entries_as_json = dumps(entries)
+    return entries_as_json
+
+
+@app.route('/testdocument', methods=['GET'])
+def test_document():
+    BASE_URL = 'http://stockinformationprocurer-document-service-1:9010'
+    URL = BASE_URL + '/get'
+    response = requests.get(URL)
+    print(response)
+    print(response.content)
+    return response.content
 
 
 if __name__ == '__main__':
