@@ -9,7 +9,6 @@ api = Api(app)
 app.config['JSON_SORT_KEYS'] = False
 print('version 6')
 
-#test
 @app.route('/get', methods=['GET'])
 def get_test():
     return 'Successful'
