@@ -11,11 +11,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     ports:
-      - "5431:5431"
+      - "5432:5432"
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
+    networks:
+      - ms-network
 
 
   adminer:
@@ -34,22 +36,32 @@ services:
 
 
   keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    command: start-dev
     container_name: keycloak
+    build:
+      context: .
+      args:
+        KEYCLOAK_VERSION: 22.0.0
+    command: [ 'start','--optimized' ]
+    depends_on:
+      - "postgres"
     environment:
-      DB_VENDOR: postgres
-      DB_ADDR: postgres
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_PASSWORD: password
+      KC_DB_PASSWORD: password
+      KC_DB_URL: jdbc:postgresql://postgres/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_HEALTH_ENABLED: 'true'
+      KC_HOSTNAME_STRICT: 'false'
+      KC_HOSTNAME_STRICT_HTTPS: 'false'
+      KC_HTTP_ENABLED: 'true'
+      KC_METRICS_ENABLED: 'true'
       KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
     ports:
-      - "8080:8080"
-    restart: unless-stopped
+      - "8180:8080"
+      - "8787:8787" # debug port
     networks:
       - ms-network
+
+
 
   mongodb:
     image: mongo:latest
@@ -93,15 +105,15 @@ services:
     networks:
       - ms-network
 
-#  stock-web-scraping-service:
-#    build: ./StockWebScrapingServiceNew
-#    restart: on-failure
-#    ports:
-#      - "9040:9040"
-##    depends_on:
-##      - mongodb
-#    networks:
-#      - ms-network
+  #  stock-web-scraping-service:
+  #    build: ./StockWebScrapingServiceNew
+  #    restart: on-failure
+  #    ports:
+  #      - "9040:9040"
+  ##    depends_on:
+  ##      - mongodb
+  #    networks:
+  #      - ms-network
 
 
   stock-web-scraping-service-py:
