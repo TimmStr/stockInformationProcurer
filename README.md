@@ -6,3 +6,8 @@ User: keycloak
 Password: password
 Database: keycloak
 URL: jdbc:postgresql://localhost:5432/keycloak
+
+
+
+POSTGRES SQL Konfiguration:
+grant all privileges on database keycloak to keycloak;

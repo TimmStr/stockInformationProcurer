@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection = "stockinformations")
+@Document("stocks")
 @Data
 public class StockEntity {
     @Field(name = "symbol")
