@@ -19,19 +19,19 @@ services:
     networks:
       - ms-network
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - "9094:9094"
-    command:
-      - 'php'
-      - '-S'
-      - '[::]:9094'
-      - '-t'
-      - '/var/www/html'
-    entrypoint:
-      - 'entrypoint.sh'
+#  adminer:
+#    image: adminer
+#    restart: always
+#    ports:
+#      - "9094:9094"
+#    command:
+#      - 'php'
+#      - '-S'
+#      - '[::]:9094'
+#      - '-t'
+#      - '/var/www/html'
+#    entrypoint:
+#      - 'entrypoint.sh'
 
 
   keycloak:
@@ -119,17 +119,6 @@ services:
       - PYTHONUNBUFFERED=1
     networks:
       - ms-network
-
-
-#  user-service:
-#    build: ./UserService
-#    restart: on-failure
-#    ports:
-#      - "9050:9050"
-#    #    depends_on:
-#    #      - mongodb
-#    networks:
-#      - ms-network
 
 
 volumes:
