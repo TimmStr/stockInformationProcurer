@@ -73,6 +73,8 @@ services:
     restart: on-failure
     ports:
       - "9010:9010"
+    depends_on:
+      - keycloak
     networks:
       - ms-network
 
