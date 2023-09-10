@@ -2,12 +2,15 @@ package com.stockInformationProcurer.controller;
 
 import com.stockInformationProcurer.entity.UserEntity;
 import com.stockInformationProcurer.services.UserRepositoryService;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -30,13 +33,6 @@ public class UserController {
         return new ResponseEntity<>(lastname +" added.", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/addUserInformation")
-    public ResponseEntity addUserInformation() {
-        UserEntity userEntity = new UserEntity("Peter", "Parker", "peter.parker@gmail.com", "1245");
-        userRepositoryService.addUserInformation(userEntity);
-        return new ResponseEntity<>("User Information", HttpStatus.OK);
-    }
-
 
 
     @RequestMapping(value = "/getUserInformation")
@@ -44,5 +40,12 @@ public class UserController {
         String userinformation = userRepositoryService.getUserInformationForLastname(lastname);
         return new ResponseEntity<>(userinformation, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/checkUser")
+    public ResponseEntity checkUser(@RequestParam String mail, @RequestParam String password) {
+        List<UserEntity> users = userRepositoryService.findAll();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
 }
 
