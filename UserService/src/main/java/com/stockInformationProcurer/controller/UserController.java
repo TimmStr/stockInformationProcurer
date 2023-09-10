@@ -1,5 +1,6 @@
 package com.stockInformationProcurer.controller;
 
+import com.stockInformationProcurer.SpecialHttpErrors.NoUserFoundException;
 import com.stockInformationProcurer.entity.UserEntity;
 import com.stockInformationProcurer.services.UserRepositoryService;
 import org.apache.catalina.User;
@@ -41,10 +42,23 @@ public class UserController {
         return new ResponseEntity<>(userinformation, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getAllUsers")
+    public ResponseEntity getAllUsers() {
+        List<UserEntity> users = userRepositoryService.findAll();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/checkUser")
     public ResponseEntity checkUser(@RequestParam String mail, @RequestParam String password) {
         List<UserEntity> users = userRepositoryService.findAll();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        for (UserEntity user : users) {
+            if (user.getMail().equals(mail) && user.getPassword().equals(password)) {
+                System.out.println(user.getMail()+" "+mail);
+                System.out.println(user.getPassword()+" "+password);
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>("User not found", HttpStatus.NOT_ACCEPTABLE);
     }
 
 }

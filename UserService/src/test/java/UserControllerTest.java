@@ -1,3 +1,4 @@
+import com.stockInformationProcurer.SpecialHttpErrors.NoUserFoundException;
 import com.stockInformationProcurer.entity.UserEntity;
 import com.stockInformationProcurer.services.UserRepositoryService;
 import com.stockInformationProcurer.controller.UserController;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class UserControllerTest {
@@ -63,20 +65,35 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testCheckUser() {
-        String mail = "john@example.com";
-        String password = "password";
+    public void testCheckUserWithValidCredentials() {
+        String mail = "peter.parker@gmail.com";
+        String password = "1245";
 
-        UserEntity user1 = new UserEntity("John", "Doe", "john@example.com", "password");
-        UserEntity user2 = new UserEntity("Alice", "Smith", "alice@example.com", "123456");
-
-        List<UserEntity> users = Arrays.asList(user1, user2);
+        UserEntity user = new UserEntity("Peter", "Parker", mail, password);
+        List<UserEntity> users = Arrays.asList(user);
 
         when(userRepositoryService.findAll()).thenReturn(users);
 
         ResponseEntity response = userController.checkUser(mail, password);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(users, response.getBody());
+        assertEquals(user, response.getBody());
+    }
+
+    @Test
+    public void testCheckUserWithInvalidCredentials() {
+        String mail = "peter.parker@gmail.co";
+        String password = "987";
+
+        List<UserEntity> users = Arrays.asList(
+                new UserEntity("Peter", "Parker", mail, "876")
+        );
+
+        when(userRepositoryService.findAll()).thenReturn(users);
+
+        ResponseEntity response = userController.checkUser(mail, password);
+
+        assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
+        assertEquals("User not found", response.getBody());
     }
 }
