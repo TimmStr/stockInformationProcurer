@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.stockInformationProcurer</groupId>
-    <artifactId>userService</artifactId>
+    <artifactId>mailService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>userService</name>
-    <description>UserService to store user profiles</description>
+    <name>mailService</name>
+    <description>Mailservice to send news to customers</description>
     <properties>
         <java.version>17</java.version>
     </properties>
