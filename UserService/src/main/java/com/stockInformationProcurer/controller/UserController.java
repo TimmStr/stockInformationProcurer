@@ -1,7 +1,9 @@
 package com.stockInformationProcurer.controller;
 
 import com.stockInformationProcurer.entity.User;
+import com.stockInformationProcurer.entity.UserStock;
 import com.stockInformationProcurer.services.UserService;
+import com.stockInformationProcurer.services.UserStockService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,14 +16,24 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserStockService userStockService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserStockService userStockService) {
         this.userService = userService;
+        this.userStockService = userStockService;
     }
 
     @RequestMapping(value = "/get")
     public ResponseEntity welcome() {
         return new ResponseEntity<>("User Controller works", HttpStatus.OK);
+    }
+
+
+    //
+//    User Requests
+//
+    public List<User> getAllUsersFromDatabase() {
+        return userService.getAllUsers();
     }
 
     @RequestMapping(value = "/addUser")
@@ -36,8 +48,8 @@ public class UserController {
                 return new ResponseEntity<>("Userprofile already exists.", HttpStatus.NOT_ACCEPTABLE);
             }
         }
-        User new_user = new User(firstname, lastname, mail, password, mail_service);
-        userService.createUser(new_user);
+        User newUser = new User(firstname, lastname, mail, password, mail_service);
+        userService.createUser(newUser);
         return new ResponseEntity<>(lastname + " added.", HttpStatus.OK);
     }
 
@@ -48,9 +60,6 @@ public class UserController {
         return new ResponseEntity<>(user.toString(), HttpStatus.OK);
     }
 
-    public List<User> getAllUsersFromDatabase() {
-        return userService.getAllUsers();
-    }
 
     @RequestMapping(value = "/getAllUsers")
     public ResponseEntity getAllUsers() {
@@ -80,5 +89,63 @@ public class UserController {
         return new ResponseEntity<>("User not found", HttpStatus.NOT_ACCEPTABLE);
     }
 
+    //
+//    UserStock Requests
+//
+    @RequestMapping(value = "/addUserStock")
+    public ResponseEntity addUserStock(@RequestParam String mail,
+                                       @RequestParam String password,
+                                       @RequestParam String stockSymbol) {
+        if (checkUser(mail, password).getStatusCode().equals(HttpStatus.OK)) {
+            List<UserStock> userStocks = userStockService.getAllUserStocks();
+            for (UserStock userStock : userStocks) {
+                if (userStock.getMail().equals(mail) && userStock.getStockSymbol().equals(stockSymbol)) {
+                    return new ResponseEntity<>(mail + " already subscribed to " + stockSymbol, HttpStatus.NOT_ACCEPTABLE);
+                }
+            }
+            UserStock newUserStock = new UserStock(mail, stockSymbol);
+            userStockService.createUserStock(newUserStock);
+        }
+        return new ResponseEntity<>("Added " + stockSymbol + " subscription to " + mail, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getStocksForUser")
+    public ResponseEntity getStockForUser(@RequestParam String mail,
+                                          @RequestParam String password) {
+        if (checkUser(mail, password).getStatusCode().equals(HttpStatus.OK)) {
+            List<UserStock> userStocks = userStockService.getAllUserStocks();
+            List<UserStock> userStocksForUser = null;
+            for (UserStock userStock : userStocks) {
+                if (userStock.getMail().equals(mail)) {
+                    userStocksForUser.add(userStock);
+                }
+            }
+            return new ResponseEntity<>(userStocksForUser, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User not found", HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @RequestMapping(value = "/deleteUserStock")
+    public ResponseEntity deleteUserStock(@RequestParam String mail,
+                                          @RequestParam String password,
+                                          @RequestParam String stockSymbol) {
+        if (checkUser(mail, password).getStatusCode().equals(HttpStatus.OK)) {
+            List<UserStock> userStocks = userStockService.getAllUserStocks();
+            for (UserStock userStock : userStocks) {
+                if (userStock.getMail().equals(mail) && userStock.getStockSymbol().equals(stockSymbol)) {
+
+                    return new ResponseEntity<>(userStockService.deleteUserStock(mail, stockSymbol), HttpStatus.OK);
+                }
+            }
+            return new ResponseEntity<>(mail + " not subscribed to " + stockSymbol, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity<>("User not found", HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @RequestMapping(value = "/getAllUserStocks")
+    public ResponseEntity getAllUserStocks() {
+        List<UserStock> userStocks = userStockService.getAllUserStocks();
+        return new ResponseEntity<>(userStocks, HttpStatus.OK);
+    }
 }
 
