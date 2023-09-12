@@ -61,7 +61,7 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: "stocks, users"
+      MONGO_INITDB_DATABASE: "stocks, users, documents"
     volumes:
       - mongodb_data:/data/db
 
