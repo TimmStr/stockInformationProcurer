@@ -8,5 +8,5 @@ COPY . /app
 
 # install the dependencies and packages in the requirements file
 RUN pip install -r requirements.txt
-EXPOSE 9030
+EXPOSE 9040
 CMD python ./app.py

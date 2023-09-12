@@ -1,7 +1,7 @@
 package com.stockInformationProcurer.controller;
 
-import com.stockInformationProcurer.entity.UserEntity;
-import com.stockInformationProcurer.services.UserRepositoryService;
+import com.stockInformationProcurer.entity.User;
+import com.stockInformationProcurer.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +12,11 @@ import java.util.List;
 
 @RestController
 public class UserController {
-    private final UserRepositoryService userRepositoryService;
 
-    public UserController(UserRepositoryService userRepositoryService) {
-        this.userRepositoryService = userRepositoryService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/get")
@@ -24,29 +25,43 @@ public class UserController {
     }
 
     @RequestMapping(value = "/addUser")
-    public ResponseEntity addUser(@RequestParam String firstname, @RequestParam String lastname, @RequestParam String mail, @RequestParam String password) {
-        UserEntity userEntity = new UserEntity(firstname, lastname, mail, password);
-        userRepositoryService.addUserInformation(userEntity);
+    public ResponseEntity addUser(@RequestParam String firstname,
+                                  @RequestParam String lastname,
+                                  @RequestParam String mail,
+                                  @RequestParam String password,
+                                  @RequestParam boolean mail_service) {
+        List<User> users = getAllUsersFromDatabase();
+        for (User user : users) {
+            if (user.getMail().equals(mail)) {
+                return new ResponseEntity<>("Userprofile already exists.", HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
+        User new_user = new User(firstname, lastname, mail, password, mail_service);
+        userService.createUser(new_user);
         return new ResponseEntity<>(lastname + " added.", HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/getUserInformation")
     public ResponseEntity getUserInformation(@RequestParam String lastname) {
-        String userinformation = userRepositoryService.getUserInformationForLastname(lastname);
-        return new ResponseEntity<>(userinformation, HttpStatus.OK);
+        User user = userService.getUserByLastname(lastname);
+        return new ResponseEntity<>(user.toString(), HttpStatus.OK);
+    }
+
+    public List<User> getAllUsersFromDatabase() {
+        return userService.getAllUsers();
     }
 
     @RequestMapping(value = "/getAllUsers")
     public ResponseEntity getAllUsers() {
-        List<UserEntity> users = userRepositoryService.findAll();
+        List<User> users = getAllUsersFromDatabase();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/checkUser")
     public ResponseEntity checkUser(@RequestParam String mail, @RequestParam String password) {
-        List<UserEntity> users = userRepositoryService.findAll();
-        for (UserEntity user : users) {
+        List<User> users = userService.getAllUsers();
+        for (User user : users) {
             if (user.getMail().equals(mail) && user.getPassword().equals(password)) {
                 System.out.println(user.getMail() + " " + mail);
                 System.out.println(user.getPassword() + " " + password);

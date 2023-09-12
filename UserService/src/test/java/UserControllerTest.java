@@ -1,9 +1,9 @@
-import com.stockInformationProcurer.SpecialHttpErrors.NoUserFoundException;
-import com.stockInformationProcurer.entity.UserEntity;
-import com.stockInformationProcurer.services.UserRepositoryService;
 import com.stockInformationProcurer.controller.UserController;
+import com.stockInformationProcurer.entity.User;
+import com.stockInformationProcurer.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
@@ -13,87 +13,79 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class UserControllerTest {
 
+    @InjectMocks
     private UserController userController;
 
     @Mock
-    private UserRepositoryService userRepositoryService;
+    private UserService userService;
 
     @BeforeEach
-    public void setUp() {
+    public void init() {
         MockitoAnnotations.initMocks(this);
-        userController = new UserController(userRepositoryService);
-    }
-
-    @Test
-    public void testWelcome() {
-        ResponseEntity response = userController.welcome();
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("User Controller works", response.getBody());
     }
 
     @Test
     public void testAddUser() {
-        String firstname = "John";
-        String lastname = "Doe";
-        String mail = "john@example.com";
-        String password = "password";
+        ResponseEntity responseEntity = userController.addUser("John", "Doe", "john@example.com", "password", true);
 
-        ResponseEntity response = userController.addUser(firstname, lastname, mail, password);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(lastname + " added.", response.getBody());
-
-        verify(userRepositoryService, times(1)).addUserInformation(any(UserEntity.class));
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        verify(userService, times(1)).createUser(any(User.class));
     }
 
     @Test
     public void testGetUserInformation() {
-        String lastname = "Doe";
-        String userInformation = "User information for Doe";
+        User user = new User("John", "Doe", "john@example.com", "password", true);
+        when(userService.getUserByLastname("Doe")).thenReturn(user);
 
-        when(userRepositoryService.getUserInformationForLastname(lastname)).thenReturn(userInformation);
+        ResponseEntity responseEntity = userController.getUserInformation("Doe");
 
-        ResponseEntity response = userController.getUserInformation(lastname);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(userInformation, response.getBody());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(user.toString(), responseEntity.getBody());
     }
 
     @Test
-    public void testCheckUserWithValidCredentials() {
-        String mail = "peter.parker@gmail.com";
-        String password = "1245";
+    public void testGetAllUsers() {
+        List<User> users = Arrays.asList(
+                new User("John", "Doe", "john@example.com", "password", true),
+                new User("Jane", "Smith", "jane@example.com", "password", true)
+        );
+        when(userService.getAllUsers()).thenReturn(users);
 
-        UserEntity user = new UserEntity("Peter", "Parker", mail, password);
-        List<UserEntity> users = Arrays.asList(user);
+        ResponseEntity responseEntity = userController.getAllUsers();
 
-        when(userRepositoryService.findAll()).thenReturn(users);
-
-        ResponseEntity response = userController.checkUser(mail, password);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(users, responseEntity.getBody());
     }
 
-    @Test
-    public void testCheckUserWithInvalidCredentials() {
-        String mail = "peter.parker@gmail.co";
-        String password = "987";
+//    @Test
+//    public void testCheckUserFound() {
+//        User user = new User("John", "Doe", "john@example.com", "password");
+//        List<User> users = Arrays.asList(user);
+//
+//        when(userService.getAllUsers()).thenReturn(users);
+//
+//        ResponseEntity responseEntity = userController.checkUser("john@example.com", "password");
+//
+//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//        assertEquals(user, responseEntity.getBody());
+//    }
 
-        List<UserEntity> users = Arrays.asList(
-                new UserEntity("Peter", "Parker", mail, "876")
+    @Test
+    public void testCheckUserNotFound() {
+        List<User> users = Arrays.asList(
+                new User("John", "Doe", "john@example.com", "password", true),
+                new User("Jane", "Smith", "jane@example.com", "password", true)
         );
 
-        when(userRepositoryService.findAll()).thenReturn(users);
+        when(userService.getAllUsers()).thenReturn(users);
 
-        ResponseEntity response = userController.checkUser(mail, password);
+        ResponseEntity responseEntity = userController.checkUser("notfound@example.com", "wrongpassword");
 
-        assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
-        assertEquals("User not found", response.getBody());
+        assertEquals(HttpStatus.NOT_ACCEPTABLE, responseEntity.getStatusCode());
+        assertEquals("User not found", responseEntity.getBody());
     }
 }

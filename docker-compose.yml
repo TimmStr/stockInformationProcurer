@@ -5,19 +5,19 @@ networks:
     driver: bridge
 
 services:
-#  postgres:
-#    image: postgres
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data
-#    restart: unless-stopped
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      POSTGRES_DB: keycloak
-#      POSTGRES_USER: keycloak
-#      POSTGRES_PASSWORD: password
-#    networks:
-#      - ms-network
+  postgres:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    networks:
+      - ms-network
 
 #  adminer:
 #    image: adminer
@@ -89,8 +89,18 @@ services:
       - ms-network
 
 
+#  stock-analysis-service:
+#    build: ./StockAnalysisService
+#    restart: on-failure
+#    ports:
+#      - "9030:9030"
+#    #    depends_on:
+#    #      - mongodb
+#    networks:
+#      - ms-network
+
   stock-analysis-service:
-    build: ./StockAnalysisService
+    build: ./StockAnalysisServicePython
     restart: on-failure
     ports:
       - "9030:9030"
@@ -98,6 +108,7 @@ services:
     #      - mongodb
     networks:
       - ms-network
+
 
 #  stock-web-scraping-service:
 #    build: ./StockWebScrapingServiceNew
