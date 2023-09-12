@@ -28,7 +28,6 @@ public class UserController {
 
     @RequestMapping(value = "/addUser")
     public ResponseEntity addUser(@RequestParam String firstname, @RequestParam String lastname, @RequestParam String mail, @RequestParam String password) {
-        System.out.println("firstname: " + firstname+ " lastname: " + lastname+  " mail: " + mail+  " password: " + password);
         UserEntity userEntity = new UserEntity(firstname, lastname, mail, password);
         userRepositoryService.addUserInformation(userEntity);
         return new ResponseEntity<>(lastname +" added.", HttpStatus.OK);
