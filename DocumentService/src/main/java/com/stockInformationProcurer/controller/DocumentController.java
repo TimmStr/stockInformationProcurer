@@ -2,13 +2,9 @@ package com.stockInformationProcurer.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//@CrossOrigin
 @RestController
 public class DocumentController {
 
@@ -19,15 +15,13 @@ public class DocumentController {
     }
 
 
-    @GetMapping
-    @PreAuthorize("hasRole('client_user')")
-    public String hello() {
-        return "Hello from Spring boot & Keycloak";
+    @RequestMapping
+    public ResponseEntity hello() {
+        return new ResponseEntity<>("Hello from Spring boot & Keycloak", HttpStatus.OK);
     }
 
-    @GetMapping("/hello-2")
-    @PreAuthorize("hasRole('client_admin')")
-    public String hello2() {
-        return "Hello from Spring boot & Keycloak - ADMIN";
+    @RequestMapping(value="/hello2")
+    public ResponseEntity hello2() {
+        return new ResponseEntity<>("Hello from Spring boot & Keycloak 2", HttpStatus.OK);
     }
 }
