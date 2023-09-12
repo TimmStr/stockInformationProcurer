@@ -71,5 +71,14 @@ public class UserController {
         return new ResponseEntity<>("User not found", HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @RequestMapping(value = "/updateUserPassword")
+    public ResponseEntity updateUserPassword(@RequestParam String mail, @RequestParam String old_password, @RequestParam String new_password) {
+        User user = userService.updateUserPassword(mail, old_password, new_password);
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User not found", HttpStatus.NOT_ACCEPTABLE);
+    }
+
 }
 
