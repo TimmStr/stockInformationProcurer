@@ -83,51 +83,29 @@ services:
     restart: on-failure
     ports:
       - "9020:9020"
-    #    depends_on:
-    #      - mongodb
+#    depends_on:
+#      - mongodb
+#      - postgres
     networks:
       - ms-network
 
-
-#  stock-analysis-service:
-#    build: ./StockAnalysisService
-#    restart: on-failure
-#    ports:
-#      - "9030:9030"
-#    #    depends_on:
-#    #      - mongodb
-#    networks:
-#      - ms-network
-
   stock-analysis-service:
-    build: ./StockAnalysisServicePython
+    build: StockAnalysisService
     restart: on-failure
     ports:
       - "9030:9030"
-    #    depends_on:
-    #      - mongodb
+    depends_on:
+      - mongodb
     networks:
       - ms-network
 
-
-#  stock-web-scraping-service:
-#    build: ./StockWebScrapingServiceNew
-#    restart: on-failure
-#    ports:
-#      - "9040:9040"
-##    depends_on:
-##      - mongodb
-#    networks:
-#      - ms-network
-
-
-  stock-web-scraping-service-py:
-    build: ./StockWebScrapingServicePython
+  stock-web-scraping-service:
+    build: StockWebScrapingService
     restart: on-failure
     ports:
       - "9040:9040"
-    #    depends_on:
-    #      - mongodb
+    depends_on:
+      - mongodb
     environment:
       - PYTHONUNBUFFERED=1
     networks:
@@ -138,8 +116,8 @@ services:
     restart: on-failure
     ports:
       - "9050:9050"
-    #    depends_on:
-    #      - mongodb
+    depends_on:
+      - postgres
     environment:
       - PYTHONUNBUFFERED=1
     networks:

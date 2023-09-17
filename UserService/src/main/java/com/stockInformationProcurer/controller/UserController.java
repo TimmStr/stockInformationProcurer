@@ -106,6 +106,9 @@ public class UserController {
             UserStock newUserStock = new UserStock(mail, stockSymbol);
             userStockService.createUserStock(newUserStock);
         }
+        else{
+            return new ResponseEntity<>("User does not exist", HttpStatus.OK)
+        }
         return new ResponseEntity<>("Added " + stockSymbol + " subscription to " + mail, HttpStatus.OK);
     }
 
