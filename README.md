@@ -10,7 +10,10 @@ URL: jdbc:postgresql://localhost:5432/keycloak
 
 
 POSTGRES SQL Konfiguration:
+CREATE DATABASE users;
+
 grant all privileges on database keycloak to keycloak;
+
 
 Create TABLE user_table(
     ID SERIAL,

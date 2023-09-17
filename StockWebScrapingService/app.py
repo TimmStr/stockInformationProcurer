@@ -1,53 +1,54 @@
-import gspread
-import pandas
 from flask import Flask, request
 from flask_restful import Api
+
+from MongoDb.MongoService import *
+from Scraper.gspread_scraper import *
+from Utils.messages import *
 
 app = Flask(__name__)
 api = Api(app)
 app.config['JSON_SORT_KEYS'] = False
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
-
-
-@app.route('/stock_data', methods=['GET'])
+@app.route('/get_stock_data_for_ticker', methods=['GET'])
 def get_stock_data():
-    ticker = request.values.get('symbol')
+    if request.values.get('ticker') is not None:
+        try:
+            return {"Ticker": request.values.get('ticker'),
+                    "Stocks": get_stock_data_as_json(request.values.get('ticker'))}
+        except:
+            return ERROR_OCCURED
+    else:
+        return PASS_A_TICKERSYMBOL
 
-    filepath = "stockinformationprocurer-f97f16464594.json"
-    filename = "Stock_Data"
-    worksheet_name = "Stock_Data_WS"
-    cell = 'A1'
 
-    gc = gspread.service_account(filename=filepath)
-    sh = gc.open(filename)
+@app.route('/save_stock_data', methods=['GET'])
+def save_stock_data():
+    if request.values.get('ticker') is not None:
+        try:
+            data_dicts = get_stock_data_as_list_of_dicts(request.values.get('ticker'))
+            return save_data_dicts(data_dicts)
+        except:
+            return ERROR_OCCURED
+    else:
+        return PASS_A_TICKERSYMBOL
 
-    worksheet_name = worksheet_name
+
+@app.route('/get_all_stocks', methods=['GET'])
+def get_all_stocks():
     try:
-        worksheet = sh.worksheet(worksheet_name)
-    except gspread.WorksheetNotFound:
-        worksheet = sh.add_worksheet(title=worksheet_name, rows=1000, cols=1000)
+        return get_all_stocks_from_mongo_db()
+    except:
+        return ERROR_OCCURED
 
-    worksheet.update(cell, ticker)
 
-    # get stock data as df
-    stock_data = pandas.DataFrame(worksheet.get_all_values())
-
-    # set values at [1] as column title
-    stock_data.columns = stock_data.iloc[1]
-
-    # drop values at [0] and [1]
-    stock_data = stock_data.iloc[2:]
-
-    # set date (daily) as index
-    stock_data.set_index('Date', inplace=True)
-
-    stock_data = stock_data.to_json()
-
-    return stock_data
+@app.route('/delete_all_stocks', methods=['GET'])
+def delete_all_stocks():
+    try:
+        delete_all_stocks_from_mongo_db()
+        return STOCKS_DELETED
+    except:
+        return ERROR_OCCURED
 
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ WORKDIR /app
 
 # copy every content from the local file to the image
 COPY . /app
-COPY stockinformationprocurer-f97f16464594.json stockinformationprocurer-f97f16464594.json
+COPY Scraper/stockinformationprocurer-f97f16464594.json stockinformationprocurer-f97f16464594.json
 
 # install the dependencies and packages in the requirements file
 RUN pip install -r scraping_requirements.txt
