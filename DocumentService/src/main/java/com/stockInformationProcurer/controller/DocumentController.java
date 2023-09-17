@@ -13,4 +13,15 @@ public class DocumentController {
     public ResponseEntity welcome() {
         return new ResponseEntity<>("Document Controller works", HttpStatus.OK);
     }
+
+
+    @RequestMapping
+    public ResponseEntity hello() {
+        return new ResponseEntity<>("Hello from Spring boot & Keycloak", HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/hello2")
+    public ResponseEntity hello2() {
+        return new ResponseEntity<>("Hello from Spring boot & Keycloak 2", HttpStatus.OK);
+    }
 }

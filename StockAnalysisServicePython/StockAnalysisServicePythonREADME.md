@@ -1,0 +1,1 @@
+Wie es aussieht macht Python 3.10 in Verbindung mit Numpy Probleme beim erstellen des Docker Containers. Nach Möglichkeit Python 3.8 nehmen und Numpy <1.24.4
