@@ -21,6 +21,25 @@ def get_worksheet_from_gspread(ticker):
     return worksheet
 
 
+def get_worksheet_from_kpis(ticker):
+    filepath = "stockinformationprocurer-f97f16464594.json"
+    filename = "Stock_Data"
+    worksheet_name = "KPIs"
+    cell = 'A1'
+
+    gc = gspread.service_account(filename=filepath)
+    sh = gc.open(filename)
+
+    worksheet_name = worksheet_name
+    try:
+        worksheet = sh.worksheet(worksheet_name)
+    except gspread.WorksheetNotFound:
+        worksheet = sh.add_worksheet(title=worksheet_name, rows=1000, cols=1000)
+
+    worksheet.update(cell, ticker)
+    return worksheet
+
+
 def get_stock_data_as_json(ticker):
     worksheet = get_worksheet_from_gspread(ticker)
     # get stock data as df
@@ -56,3 +75,17 @@ def get_stock_data_as_list_of_dicts(ticker):
             }
         )
     return values_as_dict
+
+
+def get_kpis_as_dict(ticker):
+    worksheet = get_worksheet_from_kpis(ticker)
+    kpis = worksheet.get_all_values()
+    ticker = kpis[0][0]
+    kpi_as_dict = {
+        "Ticker": ticker,
+    }
+    for item in kpis[1:]:
+        key = item[0]  # Der erste Wert in der Unterliste wird als Schlüssel verwendet
+        value = item[1]  # Der zweite Wert in der Unterliste wird als Wert verwendet
+        kpi_as_dict[key] = value
+    return kpi_as_dict

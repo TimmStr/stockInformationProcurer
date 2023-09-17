@@ -7,11 +7,11 @@ from Utils.messages import *
 
 app = Flask(__name__)
 api = Api(app)
-app.config['JSON_SORT_KEYS'] = False
+app.config['JSON_SORT_KEYS'] = True
 
 
-@app.route('/get_stock_data_for_ticker', methods=['GET'])
-def get_stock_data():
+@app.route('/get_stock_from_ticker', methods=['GET'])
+def get_stock_from_ticker():
     if request.values.get('ticker') is not None:
         try:
             return {"Ticker": request.values.get('ticker'),
@@ -21,9 +21,18 @@ def get_stock_data():
     else:
         return PASS_A_TICKERSYMBOL
 
+@app.route('/get_kpis_from_ticker', methods=['GET'])
+def get_kpis_from_ticker():
+    if request.values.get('ticker') is not None:
+        try:
+            return {"KPIs": get_kpis_as_dict(request.values.get('ticker'))}
+        except:
+            return ERROR_OCCURED
+    else:
+        return PASS_A_TICKERSYMBOL
 
-@app.route('/save_stock_data', methods=['GET'])
-def save_stock_data():
+@app.route('/save_stock', methods=['GET'])
+def save_stock():
     if request.values.get('ticker') is not None:
         try:
             data_dicts = get_stock_data_as_list_of_dicts(request.values.get('ticker'))
