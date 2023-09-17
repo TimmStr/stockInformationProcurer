@@ -15,5 +15,5 @@ COPY . /app
 RUN pip install -r analysisrequirements.txt
 #RUN #pip3 install --upgrade pip setuptools && \
 #
-EXPOSE 9040
+EXPOSE 9030
 CMD python ./app.py
