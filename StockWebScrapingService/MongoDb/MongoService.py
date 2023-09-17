@@ -20,6 +20,7 @@ def save_data_dict(dict):
 def get_all_stocks_from_mongo_db():
     entries = collection.find()
     return dumps(entries)
+#ToDo Get-Funktion für einzelne Stocks
 
 
 def delete_all_stocks_from_mongo_db():

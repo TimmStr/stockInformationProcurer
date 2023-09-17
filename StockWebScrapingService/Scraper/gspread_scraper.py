@@ -1,5 +1,6 @@
 import gspread
 import pandas as pd
+from flask import jsonify
 
 
 def get_worksheet_from_gspread(ticker):

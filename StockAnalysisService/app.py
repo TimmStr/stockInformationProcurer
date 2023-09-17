@@ -12,36 +12,49 @@ app = Flask(__name__)
 api = Api(app)
 app.config['JSON_SORT_KEYS'] = True
 
-mailserver = MAIL_SERVICE
+
 stock_scraping_service = STOCK_WEB_SCRAPING_SERVICE
 
 
 @app.route('/mail', methods=['GET'])
 def test_mail():
-    URL = mailserver + '/get'
+    URL = MAIL_SERVICE + 'get'
     response = requests.get(URL)
     return response.content
 
+
 @app.route('/startAnalysis', methods=['GET'])
 def start_analysis():
-    if request.values.get('ticker') is not None:
+    request_values = request.values
+
+    if request_values.get('ticker') is not None:
         try:
-            response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER + request.values.get('ticker'))
-            data = response.content
-            start_analysis_for_ticker(data.get("Ticker"), data.get("Stocks"))
-            return response
+            stock_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER,
+                                          params=request_values.to_dict())
+            stocks = stock_response.content
+
+            # ToDo StockWebScrapingService muss umgebaut werden. Insbesonder gspread_scraper (jsonify)??? oder gleich als worksheet?
+            print(stocks)
+            print(type(stocks))
+            print(type(stocks.keys))
+            print(type(stocks.values))
+            kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
+                                        params=request_values.to_dict())
+            kpis = kpi_response.content
+            print(kpis)
+            start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"])
+            return stock_response
         except:
             return ERROR_OCCURED
     else:
         return PASS_A_TICKERSYMBOL
 
 
-
 @app.route('/get_graphs', methods=['GET'])
 def get_graphs():
     symbol = request.values.get('symbol')
     date = request.values.get('date')
-    file_name = symbol + date + '.png'
+    file_name = GRAPHS + symbol + date + '.png'
     if request.values.get('period') is not None:
         period = request.values.get('period')
     if os.path.exists(file_name):
