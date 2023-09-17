@@ -1,6 +1,7 @@
 import requests
+import os
 from bson.json_util import dumps
-from flask import Flask
+from flask import Flask, request, send_file
 from flask_restful import Api
 from pymongo import MongoClient
 
@@ -102,6 +103,20 @@ def read_data_from_csv(symbol='TSLA'):
 @app.route('/startAnalysis', methods=['GET'])
 def start_analysis():
     return start_analysis_for_symbol(collection)
+
+
+@app.route('/get_graphs', methods=['GET'])
+def get_graphs():
+    symbol = request.values.get('symbol')
+    date = request.values.get('date')
+    file_name = symbol+date+'.png'
+    if request.values.get('period') is not None:
+        period = request.values.get('period')
+    if os.path.exists(file_name):
+        return send_file(file_name)
+    else:
+        #ToDo Get Data from Database and create graphs
+        return {"Muss noch eingefügt werden": True}
 
 
 if __name__ == '__main__':
