@@ -24,27 +24,8 @@ def test_mail():
     response = requests.get(URL)
     return response.content
 
-
-@app.route('/testmongo_upload', methods=['GET'])
-def test_mongo_upload():
-    # Beispiel-Daten zum Einfügen
-    data_to_insert = [
-        {"symbol": "AAPL", "price": 150.25, "volume": 200},
-        {"symbol": "GOOGL", "price": 2800.50, "volume": 800},
-        {"symbol": "AMZN", "price": 3500.75, "volume": 950}
-    ]
-
-    # Daten in die Datenbank einfügen
-    for entry in data_to_insert:
-        print(entry)
-        collection.insert_one(entry)
-
-    return "Daten erfolgreich eingefügt."
-
-
-@app.route('/testmongo_get', methods=['GET'])
-def test_mongo_get():
-    print('Get Test:')
+@app.route('/get_all_data_entries', methods=['GET'])
+def get_all_data_entries():
     entries = collection.find()
     entries_as_json = dumps(entries)
     return entries_as_json
@@ -59,7 +40,6 @@ def get_data_for_symbol(symbol):
     ### hier kommt Code zum ziehen aus der Datenbank
     # delete_collection_entries()
 
-    print('Hello')
     data = read_data_from_csv()
     columns = data[0]
 
@@ -92,7 +72,7 @@ def get_data_for_symbol(symbol):
     result = collection.insert_many(dicts)
     # print(result.inserted_id)
 
-    return entries
+    return dumps(dicts)
 
 
 def read_data_from_csv(symbol='TSLA'):
