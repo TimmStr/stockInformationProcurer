@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Dummy data for documents
 documents = [
@@ -34,5 +34,5 @@ def create_document():
     else:
         return jsonify({"error": "Missing 'title' or 'content' in request"}), 400
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)
