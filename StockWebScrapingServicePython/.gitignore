@@ -1,0 +1,6 @@
+*.json
+Get_GFinance_Data.ipynb
+*.xlsx
+gsheet_to_dataframe.py
+Untitled.ipynb
+.ipynb_checkpoints
