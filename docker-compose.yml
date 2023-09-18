@@ -40,6 +40,8 @@ services:
       - "9010:9010"
 #    depends_on:
 #      - keycloak
+    environment:
+      - PYTHONUNBUFFERED=1
     networks:
       - ms-network
 #    deploy:

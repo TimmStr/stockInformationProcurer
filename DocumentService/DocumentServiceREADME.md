@@ -1,2 +1,2 @@
 Swagger:
-http://localhost:9010/swagger-ui/index.html
+http://localhost:9010/api/docs/
