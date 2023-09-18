@@ -8,7 +8,7 @@ COPY . /app
 COPY Scraper/stockinformationprocurer-f97f16464594.json stockinformationprocurer-f97f16464594.json
 
 # install the dependencies and packages in the requirements file
-RUN pip install -r scraping_requirements.txt
+RUN pip install -r document_requirements.txt
 
 # Port "9040" auf dem FLASK-APP läuft
 EXPOSE 9040

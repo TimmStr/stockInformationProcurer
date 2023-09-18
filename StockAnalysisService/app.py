@@ -23,7 +23,7 @@ swaggerui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,  # Swagger UI static files will be mapped to
     API_URL,
     config={  # Swagger UI config overrides
-        'app_name': "Stock Web Scraping Service"
+        'app_name': "Stock Analysis Service"
     }
 )
 
