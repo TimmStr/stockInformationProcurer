@@ -10,55 +10,548 @@
 			"name": "StockWebScrapingService",
 			"item": [
 				{
-					"name": "Stock Web Scraping Test Stock Information Procurer",
+					"name": "Get All Stocks",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9040/getStockInformation"
+						"url": "http://localhost:9040/get_all_stocks"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Stock From Ticker",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9040/get_stock_from_ticker?ticker=NASDAQ:GOOGL",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9040",
+							"path": [
+								"get_stock_from_ticker"
+							],
+							"query": [
+								{
+									"key": "ticker",
+									"value": "NASDAQ:GOOGL"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Stock in Database",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9040/save_stock?ticker=NASDAQ:GOOGL",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9040",
+							"path": [
+								"save_stock"
+							],
+							"query": [
+								{
+									"key": "ticker",
+									"value": "NASDAQ:GOOGL"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete all Stocks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9040/delete_all_stocks"
+					},
+					"response": []
+				},
+				{
+					"name": "Get KPIs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9040/get_kpis_from_ticker?ticker=NASDAQ:GOOGL",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9040",
+							"path": [
+								"get_kpis_from_ticker"
+							],
+							"query": [
+								{
+									"key": "ticker",
+									"value": "NASDAQ:GOOGL"
+								}
+							]
+						}
 					},
 					"response": []
 				}
 			]
 		},
 		{
-			"name": "StockWebScrapingServicePython",
+			"name": "DocumentService",
 			"item": [
 				{
-					"name": "GetAll",
+					"name": "Get with Keycloak Authentification",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ6eHZ2a1JHRjJOdXRsTmJCUEw4U0tjcTcyV3ZkaDVwa3M0cUNLSlpyenNZIn0.eyJleHAiOjE2OTM3NjMzNTksImlhdCI6MTY5Mzc2MzA1OSwianRpIjoiODY4ZjFmY2ItOTk4Yy00MGI5LTk1ZmItMTMwNGVkN2E0ZjFjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL3N0b2NrLWluZm9ybWF0aW9uLXByb2N1cmVyIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImYwYjgzNDVhLWJjZTMtNDdiZS1hYjM5LTIwYjYyYWY1ODEzNCIsInR5cCI6IkJlYXJlciIsImF6cCI6ImRvY3VtZW50LXNlcnZpY2UiLCJzZXNzaW9uX3N0YXRlIjoiZWNmMjRiODYtNTI2Ny00N2ZhLWE5YjktNmIxMTQyM2QxNGY0IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXN0b2NrLWluZm9ybWF0aW9uLXByb2N1cmVyIiwib2ZmbGluZV9hY2Nlc3MiLCJhZG1pbiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19LCJkb2N1bWVudC1zZXJ2aWNlIjp7InJvbGVzIjpbImNsaWVudF9hZG1pbiJdfX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsInNpZCI6ImVjZjI0Yjg2LTUyNjctNDdmYS1hOWI5LTZiMTE0MjNkMTRmNCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoidGltbSJ9.E4Lfigvk_M69mKIB02cDbZrET2G_5YGmrpSk7tKbMuvEF4pKaJ3S7T-Sg20lv7zweB5hpD-EofvBtKu4BtM2DyeJgvn_qyC52lotQgBiF6NgUQ-cg9dh4pnx2w7tKoa1hADbXwYxqkBzhZAHTqjPIzq7zJ1rjiTiZ7GBcxvJ9u73TZNcKcrrgO9ob1QFRA6wNspJqN_UUEupi6NeahsSkdx90A9PZCG5wkqn7qbU-LFpvXA6nBPqStJm1kh0z2PLe1J1kRPYfkx3AwNmEkF_CzmbwDLTNz331LVUHStzIR5rej8Rp_dt9w2dON8B_m73KhTgV9P0ek_S26kc8LD6DA"
+							}
+						},
 						"method": "GET",
 						"header": [],
-						"url": "http://127.0.0.1:5000"
+						"url": "http://localhost:9010/get"
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserService",
+			"item": [
+				{
+					"name": "User Stock",
+					"item": [
+						{
+							"name": "Add User Stock",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9050/addUserStock?mail=karl.lauterbach@thm.de&password=1598abde&stockSymbol=GOOG",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9050",
+									"path": [
+										"addUserStock"
+									],
+									"query": [
+										{
+											"key": "mail",
+											"value": "karl.lauterbach@thm.de"
+										},
+										{
+											"key": "password",
+											"value": "1598abde"
+										},
+										{
+											"key": "stockSymbol",
+											"value": "GOOG"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All User Stocks",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:9050/getAllUserStocks"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User Stock",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9050/deleteUserStock?mail=marx.augusts@gmx.net&password=abcde&stockSymbol=TSLA",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9050",
+									"path": [
+										"deleteUserStock"
+									],
+									"query": [
+										{
+											"key": "mail",
+											"value": "marx.augusts@gmx.net"
+										},
+										{
+											"key": "password",
+											"value": "abcde"
+										},
+										{
+											"key": "stockSymbol",
+											"value": "TSLA"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User Stocks by Mail",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9050/deleteUserStocksByMail?mail=karl.lauterbach@thm.de&password=1598abde",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9050",
+									"path": [
+										"deleteUserStocksByMail"
+									],
+									"query": [
+										{
+											"key": "mail",
+											"value": "karl.lauterbach@thm.de"
+										},
+										{
+											"key": "password",
+											"value": "1598abde"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Stocks for User",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9050/getStocksForUser?mail=karl.lauterbach@thm.de&password=1598abde",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9050",
+									"path": [
+										"getStocksForUser"
+									],
+									"query": [
+										{
+											"key": "mail",
+											"value": "karl.lauterbach@thm.de"
+										},
+										{
+											"key": "password",
+											"value": "1598abde"
+										},
+										{
+											"key": "stockSymbol",
+											"value": "GOOG",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
-					"name": "Mongo Get",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "http://localhost:9040/testmongo_get"
-					},
-					"response": []
-				},
+					"name": "User",
+					"item": [
+						{
+							"name": "Get All Users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:9050/getAllUsers"
+							},
+							"response": []
+						},
+						{
+							"name": "Check User",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9050/checkUser?mail=karl.lauterbach@thm.de&password=1598abde",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9050",
+									"path": [
+										"checkUser"
+									],
+									"query": [
+										{
+											"key": "mail",
+											"value": "karl.lauterbach@thm.de"
+										},
+										{
+											"key": "password",
+											"value": "1598abde"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add User",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9050/addUser?firstname=Karl&lastname=Lauterbach&mail=karl.lauterbach@thm.de&password=1598abde&mail_service=True",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9050",
+									"path": [
+										"addUser"
+									],
+									"query": [
+										{
+											"key": "firstname",
+											"value": "Karl"
+										},
+										{
+											"key": "lastname",
+											"value": "Lauterbach"
+										},
+										{
+											"key": "mail",
+											"value": "karl.lauterbach@thm.de"
+										},
+										{
+											"key": "password",
+											"value": "1598abde"
+										},
+										{
+											"key": "mail_service",
+											"value": "True"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update User Password",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9050/updateUserPassword?mail=karl.lauterbach@thm.de&old_password=1598abde&new_password=76452",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9050",
+									"path": [
+										"updateUserPassword"
+									],
+									"query": [
+										{
+											"key": "mail",
+											"value": "karl.lauterbach@thm.de"
+										},
+										{
+											"key": "old_password",
+											"value": "1598abde"
+										},
+										{
+											"key": "new_password",
+											"value": "76452"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User By Lastname",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9050/getUserByLastname?lastname=Lauterbach",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9050",
+									"path": [
+										"getUserByLastname"
+									],
+									"query": [
+										{
+											"key": "lastname",
+											"value": "Lauterbach"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User By Mail",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9050/getUserByMail?mail=karl.lauterbach@thm.de",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9050",
+									"path": [
+										"getUserByMail"
+									],
+									"query": [
+										{
+											"key": "mail",
+											"value": "karl.lauterbach@thm.de"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete All Users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:9050/deleteAllUsers"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User by Mail",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9050/deleteUserByMail?mail=karl.lauterbach@thm.de&password=1598abde",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9050",
+									"path": [
+										"deleteUserByMail"
+									],
+									"query": [
+										{
+											"key": "mail",
+											"value": "karl.lauterbach@thm.de"
+										},
+										{
+											"key": "password",
+											"value": "1598abde"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "StockAnalysisService",
+			"item": [
 				{
-					"name": "Test Document Service",
+					"name": "Mail Test",
 					"request": {
 						"auth": {
 							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
-						"url": "http://127.0.0.1:9040/testdocument"
+						"url": "http://localhost:9030/mail"
 					},
 					"response": []
 				},
 				{
-					"name": "test Mongo Upload",
+					"name": "Create Graph",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9040/testmongo_upload"
+						"url": {
+							"raw": "http://localhost:9030/startAnalysis?ticker=NASDAQ:GOOGL",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9030",
+							"path": [
+								"startAnalysis"
+							],
+							"query": [
+								{
+									"key": "ticker",
+									"value": "NASDAQ:GOOGL"
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Graph",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9030/get_graphs?symbol=TSLA&date=2023-09-11&period=x",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9030",
+							"path": [
+								"get_graphs"
+							],
+							"query": [
+								{
+									"key": "symbol",
+									"value": "TSLA"
+								},
+								{
+									"key": "date",
+									"value": "2023-09-11"
+								},
+								{
+									"key": "period",
+									"value": "x"
+								}
+							]
+						}
 					},
 					"response": []
 				}
