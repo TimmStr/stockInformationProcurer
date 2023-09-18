@@ -5,6 +5,20 @@ networks:
     driver: bridge
 
 services:
+  postgres:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    networks:
+      - ms-network
+
 
   mongodb:
     image: mongo:latest
@@ -12,7 +26,7 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: stocks
+      MONGO_INITDB_DATABASE: "stocks, users, documents"
     volumes:
       - mongodb_data:/data/db
 
@@ -24,62 +38,70 @@ services:
     restart: on-failure
     ports:
       - "9010:9010"
+#    depends_on:
+#      - keycloak
     networks:
       - ms-network
+#    deploy:
+#      replicas: 3
 
   mail-service:
     build: ./MailService
     restart: on-failure
     ports:
       - "9020:9020"
-    #    depends_on:
-    #      - mongodb
+#    depends_on:
+#      - mongodb
+#      - postgres
     networks:
       - ms-network
-
+#    deploy:
+#      replicas: 3
 
   stock-analysis-service:
-    build: ./StockAnalysisService
+    build: StockAnalysisService
     restart: on-failure
     ports:
       - "9030:9030"
-    #    depends_on:
-    #      - mongodb
+    depends_on:
+      - mongodb
+    environment:
+      - PYTHONUNBUFFERED=1
     networks:
       - ms-network
+#    deploy:
+#      replicas: 3
 
-#  stock-web-scraping-service:
-#    build: ./StockWebScrapingServiceNew
-#    restart: on-failure
-#    ports:
-#      - "9040:9040"
-##    depends_on:
-##      - mongodb
-#    networks:
-#      - ms-network
-
-
-  stock-web-scraping-service-py:
-    build: ./StockWebScrapingServicePython
+  stock-web-scraping-service:
+    build: StockWebScrapingService
     restart: on-failure
     ports:
       - "9040:9040"
-    #    depends_on:
-    #      - mongodb
+    depends_on:
+      - mongodb
+    environment:
+      - PYTHONUNBUFFERED=1
     networks:
       - ms-network
-
+#    deploy:
+#      replicas: 3
 
   user-service:
     build: ./UserService
     restart: on-failure
     ports:
       - "9050:9050"
-    #    depends_on:
-    #      - mongodb
+    depends_on:
+      - postgres
+    environment:
+      - PYTHONUNBUFFERED=1
     networks:
       - ms-network
+#    deploy:
+#      replicas: 3
 
 
 volumes:
   mongodb_data:
+  postgres_data:
+    driver: local

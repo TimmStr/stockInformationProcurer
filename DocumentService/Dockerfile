@@ -10,6 +10,7 @@ RUN mvn -f pom.xml clean package
 
 FROM openjdk:17-alpine
 WORKDIR /app
+EXPOSE 9010
 COPY --from=mvn-build /app/build/target/*.jar ./DocumentService.jar
 #ENV CONTAINER_NAME=hms-ca-service \
 #    PORT=8082 \
