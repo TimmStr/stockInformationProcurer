@@ -34,6 +34,10 @@ ticker_parameter = api.model('Parameter', {
     'ticker': fields.String(required=True, description='Das Tickersymbol z.B. NASDAQ:AAPL')
 })
 
+file_name = api.model('Parameter', {
+    'file_name': fields.String(required=True, description='Filename')
+})
+
 
 @api.route('/mail')
 class GetMail(Resource):
@@ -88,6 +92,7 @@ class StartAnalysis(Resource):
         else:
             return PASS_A_TICKERSYMBOL
 
+
 @api.route('/startAnalysis')
 class GetKpis(Resource):
     @api.expect(ticker_parameter)
@@ -104,21 +109,19 @@ class GetKpis(Resource):
             return PASS_A_TICKERSYMBOL
 
 
-
-@api.route('/get_graphs')
+@api.route('/getGraphs')
 class GetGraphs(Resource):
-    @api.expect(ticker_parameter)
+    @api.expect(file_name)
     def get(self):
-        ticker = request.values.get('ticker')
-        date = request.values.get('date')
-        file_name = GRAPHS + ticker + date + '.png'
-        if request.values.get('period') is not None:
-            period = request.values.get('period')
-        if os.path.exists(file_name):
-            return send_file(file_name)
+        if request.values.get('file_name') is not None:
+            file_name = request.values.get('file_name')
+            try:
+                if os.path.exists(file_name):
+                    return send_file(file_name)
+            except Exception as e:
+                return {"Succesful": False, "Error": str(e)}
         else:
-            # ToDo Get Data from Database and create graphs
-            return {"Muss noch eingefügt werden": True}
+            return PASS_A_FILENAME
 
 
 if __name__ == '__main__':

@@ -59,3 +59,5 @@ def draw_graph(ticker, date, close_val, high_val, volume):
     filenames.append(filename)
 
     return filenames
+
+
