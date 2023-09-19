@@ -26,10 +26,10 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 
 app.register_blueprint(swaggerui_blueprint)
 
-
 ticker_parameter = api.model('Parameter', {
     'ticker': fields.String(required=True, description='Das Tickersymbol z.B. NASDAQ:AAPL')
 })
+
 
 @api.route('/get_stock_from_ticker')
 class GetStockFromTicker(Resource):
@@ -39,8 +39,8 @@ class GetStockFromTicker(Resource):
         if ticker:
             try:
                 return {"Ticker": ticker, "Stocks": get_stock_data_as_json(ticker)}
-            except:
-                return ERROR_OCCURED
+            except Exception as e:
+                return {"Succesful": False, "Error": str(e)}
         else:
             return PASS_A_TICKERSYMBOL
 
@@ -52,8 +52,8 @@ class GetKpisFromTicker(Resource):
         if request.values.get('ticker') is not None:
             try:
                 return {"KPIs": get_kpis_as_dict(request.values.get('ticker'))}
-            except:
-                return ERROR_OCCURED
+            except Exception as e:
+                return {"Succesful": False, "Error": str(e)}
         else:
             return PASS_A_TICKERSYMBOL
 
@@ -64,10 +64,22 @@ class SaveStock(Resource):
     def put(self):
         if request.values.get('ticker') is not None:
             try:
+                ticker = request.values.get('ticker')
                 data_dicts = get_stock_data_as_list_of_dicts(request.values.get('ticker'))
-                return save_data_dicts(data_dicts)
-            except:
-                return ERROR_OCCURED
+                inserted_count = 0
+                for dicti in data_dicts:
+                    existing_entry = find_one({"Ticker": ticker, "Date": dicti["Date"]})
+
+                    if not existing_entry:
+                        save_data_dict(dicti)
+                        inserted_count += 1
+                if inserted_count > 0:
+                    return {"Succesful": True, "InsertedCount": inserted_count}
+                else:
+                    return {"Succesful": True, "Message": "Alle Daten waren bereits vorhanden."}
+
+            except Exception as e:
+                return {"Succesful": False, "Error": str(e)}
         else:
             return PASS_A_TICKERSYMBOL
 
@@ -76,9 +88,22 @@ class SaveStock(Resource):
 class GetAllStocks(Resource):
     def get(self):
         try:
+            print(get_all_stocks_from_mongo_db())
             return get_all_stocks_from_mongo_db()
-        except:
-            return ERROR_OCCURED
+        except Exception as e:
+            return {"Succesful": False, "Error": str(e)}
+
+
+@api.route('/get_stocks_from_database_with_ticker')
+class GetStocksFromDatabaseWithTicker(Resource):
+    def get(self):
+        if request.values.get('ticker') is not None:
+            try:
+                return get_stock_from_mongo_db(request.values.get('ticker'))
+            except Exception as e:
+                return {"Succesful": False, "Error": str(e)}
+        else:
+            return PASS_A_TICKERSYMBOL
 
 
 @api.route('/delete_all_stocks')
@@ -87,8 +112,8 @@ class DeleteAllStocks(Resource):
         try:
             delete_all_stocks_from_mongo_db()
             return STOCKS_DELETED
-        except:
-            return ERROR_OCCURED
+        except Exception as e:
+            return {"Succesful": False, "Error": str(e)}
 
 
 if __name__ == '__main__':

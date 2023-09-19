@@ -13,6 +13,8 @@ import com.stockInformationProcurer.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +29,8 @@ public class UserService {
      * @param user The User object representing the user to be created.
      * @return The created User object.
      */
-    public User createUser(User user) {
+    public User createUser(User user) throws NoSuchAlgorithmException {
+        user.setPassword(getMD5Hash(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -69,12 +72,12 @@ public class UserService {
      * @return The updated user entity if the password is successfully updated, or null if not found
      *         or the old password is incorrect.
      */
-    public User updateUserPassword(String mail, String old_password, String new_password) {
+    public User updateUserPassword(String mail, String old_password, String new_password) throws NoSuchAlgorithmException {
         Optional<User> user = Optional.ofNullable(userRepository.findByMail(mail));
         if (user.isPresent()) {
             User existingUser = user.get();
-            if (existingUser.getPassword().equals(old_password)) {
-                existingUser.setPassword(new_password);
+            if (verifyPassword(old_password, existingUser.getPassword())) {
+                existingUser.setPassword(getMD5Hash(new_password));
                 return userRepository.save(existingUser);
             }
         }
@@ -95,5 +98,24 @@ public class UserService {
      */
     public void deleteUserByMail(String mail) {
         userRepository.deleteByMail(mail);
+    }
+
+
+    public String getMD5Hash(String input) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(input.getBytes());
+        byte[] digest = md.digest();
+        StringBuilder hashString = new StringBuilder();
+
+        for (byte b : digest) {
+            hashString.append(String.format("%02x", b));
+        }
+
+        return hashString.toString();
+    }
+
+    public boolean verifyPassword(String inputPassword, String storedHash) throws NoSuchAlgorithmException {
+        String hashedInput = getMD5Hash(inputPassword);
+        return hashedInput.equals(storedHash);
     }
 }

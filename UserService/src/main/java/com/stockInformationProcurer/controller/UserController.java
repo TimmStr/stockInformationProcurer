@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -101,10 +102,10 @@ public class UserController {
      * or an error message with HTTP status NOT_ACCEPTABLE if the credentials are invalid or the user is not found.
      */
     @RequestMapping(value = "/checkUser", method = RequestMethod.GET)
-    public ResponseEntity checkUser(@RequestParam String mail, @RequestParam String password) {
+    public ResponseEntity checkUser(@RequestParam String mail, @RequestParam String password) throws NoSuchAlgorithmException {
         List<User> users = userService.getAllUsers();
         for (User user : users) {
-            if (user.getMail().equals(mail) && user.getPassword().equals(password)) {
+            if (user.getMail().equals(mail) && userService.verifyPassword(password, user.getPassword())) {
                 System.out.println(user.getMail() + " " + mail);
                 System.out.println(user.getPassword() + " " + password);
                 return new ResponseEntity<>(user, HttpStatus.OK);
@@ -130,7 +131,7 @@ public class UserController {
                                   @RequestParam String lastname,
                                   @RequestParam String mail,
                                   @RequestParam String password,
-                                  @RequestParam boolean mail_service) {
+                                  @RequestParam boolean mail_service) throws NoSuchAlgorithmException {
         List<User> users = getAllUsersFromDatabase();
         for (User user : users) {
             if (user.getMail().equals(mail)) {
@@ -153,7 +154,7 @@ public class UserController {
      * or an error message with HTTP status NOT_ACCEPTABLE if the user is not found or the old password is incorrect.
      */
     @RequestMapping(value = "/updateUserPassword", method = RequestMethod.PUT)
-    public ResponseEntity updateUserPassword(@RequestParam String mail, @RequestParam String old_password, @RequestParam String new_password) {
+    public ResponseEntity updateUserPassword(@RequestParam String mail, @RequestParam String old_password, @RequestParam String new_password) throws NoSuchAlgorithmException {
         User user = userService.updateUserPassword(mail, old_password, new_password);
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
@@ -183,7 +184,7 @@ public class UserController {
      * or an error message with HTTP status NOT_ACCEPTABLE if the user was not found.
      */
     @RequestMapping(value = "/deleteUserByMail", method = RequestMethod.GET)
-    public ResponseEntity deleteUserByMail(@RequestParam String mail, @RequestParam String password) {
+    public ResponseEntity deleteUserByMail(@RequestParam String mail, @RequestParam String password) throws NoSuchAlgorithmException {
         if (checkUser(mail, password).getStatusCode().equals(HttpStatus.OK)) {
             userStockService.deleteUserStocksByMail(mail);
             userService.deleteUserByMail(mail);
@@ -216,7 +217,7 @@ public class UserController {
      */
     @RequestMapping(value = "/getStocksForUser", method = RequestMethod.GET)
     public ResponseEntity getStocksForUser(@RequestParam String mail,
-                                           @RequestParam String password) {
+                                           @RequestParam String password) throws NoSuchAlgorithmException {
         if (checkUser(mail, password).getStatusCode().equals(HttpStatus.OK)) {
             List<UserStock> userStocks = userStockService.getUserStocksByMail(mail);
             return new ResponseEntity<>(userStocks, HttpStatus.OK);
@@ -237,7 +238,7 @@ public class UserController {
     @RequestMapping(value = "/addUserStock", method = RequestMethod.PUT)
     public ResponseEntity addUserStock(@RequestParam String mail,
                                        @RequestParam String password,
-                                       @RequestParam String stockSymbol) {
+                                       @RequestParam String stockSymbol) throws NoSuchAlgorithmException {
         if (checkUser(mail, password).getStatusCode().equals(HttpStatus.OK)) {
             List<UserStock> userStocks = userStockService.getAllUserStocks();
             for (UserStock userStock : userStocks) {
@@ -266,7 +267,7 @@ public class UserController {
     @RequestMapping(value = "/deleteUserStock", method = RequestMethod.GET)
     public ResponseEntity deleteUserStock(@RequestParam String mail,
                                           @RequestParam String password,
-                                          @RequestParam String stockSymbol) {
+                                          @RequestParam String stockSymbol) throws NoSuchAlgorithmException {
         if (checkUser(mail, password).getStatusCode().equals(HttpStatus.OK)) {
             List<UserStock> userStocks = userStockService.getAllUserStocks();
             for (UserStock userStock : userStocks) {
@@ -291,7 +292,7 @@ public class UserController {
      */
     @RequestMapping(value = "/deleteUserStocksByMail", method = RequestMethod.GET)
     public ResponseEntity deleteUserStocksByMail(@RequestParam String mail,
-                                                 @RequestParam String password) {
+                                                 @RequestParam String password) throws NoSuchAlgorithmException {
         if (checkUser(mail, password).getStatusCode().equals(HttpStatus.OK)) {
             userStockService.deleteUserStocksByMail(mail);
             return new ResponseEntity<>("The shares for the customer have been deleted", HttpStatus.OK);

@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testAddUser() {
+    public void testAddUser() throws NoSuchAlgorithmException {
         ResponseEntity responseEntity = userController.addUser("John", "Doe", "john@example.com", "password", true);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -66,7 +67,7 @@ public class UserControllerTest {
 
 
     @Test
-    public void testCheckUserNotFound() {
+    public void testCheckUserNotFound() throws NoSuchAlgorithmException {
         List<User> users = Arrays.asList(
                 new User("John", "Doe", "john@example.com", "password", true),
                 new User("Jane", "Smith", "jane@example.com", "password", true)
@@ -81,7 +82,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testUpdateUserPassword() {
+    void testUpdateUserPassword() throws NoSuchAlgorithmException {
         User user = new User("John", "Doe", "john@example.com", "old_password", true);
         when(userService.updateUserPassword("john@example.com", "old_password", "new_password")).thenReturn(user);
 

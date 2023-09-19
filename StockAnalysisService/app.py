@@ -8,6 +8,8 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from AnalysisService import start_analysis_for_ticker
 from Path.paths import *
 from Utils.messages import *
+from Service.GetInformationService import *
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -39,7 +41,26 @@ class GetMail(Resource):
     def get(self):
         URL = MAIL_SERVICE + 'get'
         response = requests.get(URL)
-        return response.content
+        return response.json()
+@api.route('/getStocksFromDatabase')
+class GetStocksFromDatabase(Resource):
+    def get(self):
+        print(get_all_stocks_from_database())
+        return get_all_stocks_from_database()
+
+@api.route('/getStockFromDatabase')
+class GetStockFromDatabase(Resource):
+    @api.expect(ticker_parameter)
+    def get(self):
+        request_values = request.values
+        if request.values.get('ticker') is not None:
+            try:
+                return stock_from_database(request_values.to_dict())
+            except:
+                return ERROR_OCCURED
+        else:
+            return PASS_A_TICKERSYMBOL
+
 
 
 @api.route('/startAnalysis')

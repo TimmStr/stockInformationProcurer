@@ -16,11 +16,23 @@ def save_data_dicts(list_of_dicts):
 def save_data_dict(dict):
     return collection.insert_one(dict)
 
-
+def find_one(dict):
+    return collection.find_one(dict)
 def get_all_stocks_from_mongo_db():
     entries = collection.find()
     return dumps(entries)
-#ToDo Get-Funktion für einzelne Stocks
+
+
+# ToDo Get-Funktion für einzelne Stocks
+
+def get_stock_from_mongo_db(ticker):
+    query = {"Ticker": ticker}
+    entries = collection.find(query)
+    as_dict = [entry for entry in entries]
+    for entry in entries:
+        print(entry)
+    print(entries)
+    return dumps(as_dict)
 
 
 def delete_all_stocks_from_mongo_db():
