@@ -31,7 +31,7 @@ ticker_parameter = api.model('Parameter', {
 })
 
 
-@api.route('/get_stock_from_ticker')
+@api.route('/getStockFromTicker')
 class GetStockFromTicker(Resource):
     @api.expect(ticker_parameter)
     def get(self):
@@ -45,7 +45,7 @@ class GetStockFromTicker(Resource):
             return PASS_A_TICKERSYMBOL
 
 
-@api.route('/get_kpis_from_ticker')
+@api.route('/getKpisFromTicker')
 class GetKpisFromTicker(Resource):
     @api.expect(ticker_parameter)
     def get(self):
@@ -58,33 +58,20 @@ class GetKpisFromTicker(Resource):
             return PASS_A_TICKERSYMBOL
 
 
-@api.route('/save_stock')
+@api.route('/saveStock')
 class SaveStock(Resource):
     @api.expect(ticker_parameter)
     def put(self):
         if request.values.get('ticker') is not None:
             try:
-                ticker = request.values.get('ticker')
-                data_dicts = get_stock_data_as_list_of_dicts(request.values.get('ticker'))
-                inserted_count = 0
-                for dicti in data_dicts:
-                    existing_entry = find_one({"Ticker": ticker, "Date": dicti["Date"]})
-
-                    if not existing_entry:
-                        save_data_dict(dicti)
-                        inserted_count += 1
-                if inserted_count > 0:
-                    return {"Succesful": True, "InsertedCount": inserted_count}
-                else:
-                    return {"Succesful": True, "Message": "Alle Daten waren bereits vorhanden."}
-
+                return save_stock_in_database(request.values.get('ticker'))
             except Exception as e:
                 return {"Succesful": False, "Error": str(e)}
         else:
             return PASS_A_TICKERSYMBOL
 
 
-@api.route('/get_all_stocks')
+@api.route('/getAllStocks')
 class GetAllStocks(Resource):
     def get(self):
         try:
@@ -94,7 +81,7 @@ class GetAllStocks(Resource):
             return {"Succesful": False, "Error": str(e)}
 
 
-@api.route('/get_stocks_from_database_with_ticker')
+@api.route('/getStocksFromDatabaseWithTicker')
 class GetStocksFromDatabaseWithTicker(Resource):
     def get(self):
         if request.values.get('ticker') is not None:
@@ -106,7 +93,7 @@ class GetStocksFromDatabaseWithTicker(Resource):
             return PASS_A_TICKERSYMBOL
 
 
-@api.route('/delete_all_stocks')
+@api.route('/deleteAllStocks')
 class DeleteAllStocks(Resource):
     def get(self):
         try:

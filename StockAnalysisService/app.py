@@ -4,12 +4,11 @@ import requests
 from flask import Flask, request, send_file
 from flask_restx import Api, Resource, fields
 from flask_swagger_ui import get_swaggerui_blueprint
-
+import json
 from AnalysisService import start_analysis_for_ticker
 from Path.paths import *
 from Utils.messages import *
 from Service.GetInformationService import *
-
 
 app = Flask(__name__)
 api = Api(app)
@@ -42,11 +41,14 @@ class GetMail(Resource):
         URL = MAIL_SERVICE + 'get'
         response = requests.get(URL)
         return response.json()
+
+
 @api.route('/getStocksFromDatabase')
 class GetStocksFromDatabase(Resource):
     def get(self):
         print(get_all_stocks_from_database())
         return get_all_stocks_from_database()
+
 
 @api.route('/getStockFromDatabase')
 class GetStockFromDatabase(Resource):
@@ -56,11 +58,10 @@ class GetStockFromDatabase(Resource):
         if request.values.get('ticker') is not None:
             try:
                 return stock_from_database(request_values.to_dict())
-            except:
-                return ERROR_OCCURED
+            except Exception as e:
+                return {"Succesful": False, "Error": str(e)}
         else:
             return PASS_A_TICKERSYMBOL
-
 
 
 @api.route('/startAnalysis')
@@ -68,28 +69,40 @@ class StartAnalysis(Resource):
     @api.expect(ticker_parameter)
     def get(self):
         request_values = request.values
-
         if request_values.get('ticker') is not None:
             try:
                 stock_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER,
                                               params=request_values.to_dict())
-                stocks = stock_response.content
+                stocks = stock_response.json()
+                # print(stocks["Ticker"])
+                # print(stocks["Stocks"])
 
                 # ToDo StockWebScrapingService muss umgebaut werden. Insbesonder gspread_scraper (jsonify)??? oder gleich als worksheet?
-                print(stocks)
-                print(type(stocks))
-                print(type(stocks.keys))
-                print(type(stocks.values))
-                kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
-                                            params=request_values.to_dict())
-                kpis = kpi_response.content
-                print(kpis)
-                start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"])
-                return stock_response
-            except:
-                return ERROR_OCCURED
+                # kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
+                #                             params=request_values.to_dict())
+                # kpis = kpi_response.json()
+
+                return start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"])
+            except Exception as e:
+                return {"Succesful": False, "Error": str(e)}
         else:
             return PASS_A_TICKERSYMBOL
+
+@api.route('/startAnalysis')
+class GetKpis(Resource):
+    @api.expect(ticker_parameter)
+    def get(self):
+        request_values = request.values
+        if request_values.get('ticker') is not None:
+            try:
+                kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
+                                            params=request_values.to_dict())
+                return kpi_response.json()
+            except Exception as e:
+                return {"Succesful": False, "Error": str(e)}
+        else:
+            return PASS_A_TICKERSYMBOL
+
 
 
 @api.route('/get_graphs')
