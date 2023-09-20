@@ -6,7 +6,6 @@
 */
 package com.stockInformationProcurer.controller;
 
-import com.stockInformationProcurer.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
