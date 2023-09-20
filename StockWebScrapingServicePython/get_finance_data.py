@@ -63,3 +63,4 @@ stock_data = get_finance_data(filepath, filename, worksheet_name, ticker, cell)
 
 print(stock_data)
 
+# Google Finance docu - tickers: https://www.google.com/googlefinance/disclaimer/
