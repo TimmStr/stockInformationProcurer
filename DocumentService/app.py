@@ -1,11 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields
 from flask_swagger_ui import get_swaggerui_blueprint
-from flasgger import Swagger
+#from flasgger import Swagger
 
 app = Flask(__name__)
 api = Api(app)
 app.config['JSON_SORT_KEYS'] = True
+#swagger = Swagger(app)
 
 # URL for Swagger UI
 SWAGGER_URL = '/api/docs'

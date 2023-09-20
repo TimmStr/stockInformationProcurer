@@ -18,3 +18,4 @@ gspread==5.11.1
 pandas==2.1.0
 flask-restx==1.1.0
 flask-swagger-ui==4.11.1
+flasgger==0.9.7.1
