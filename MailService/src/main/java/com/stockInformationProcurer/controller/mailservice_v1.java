@@ -1,48 +1,57 @@
-import java.util.Properties;
-import javax.mail.*;
-import javax.mail.internet.*;
+/**
+ * The 'MailService' class provides methods to send and receive emails.
+ * It allows users to send emails with attachments, set email content,
+ * and manage email recipients. This service uses a specified email server
+ * for sending and receiving emails.
+*/
+package com.stockInformationProcurer.controller;
 
-public class SimpleMailService {
+import com.stockInformationProcurer.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 
-    public static void main(String[] args) {
-        // Konfigurieren Sie die Mail-Einstellungen
-        String smtpHost = "smtp.example.com"; // SMTP-Server
-        String smtpPort = "587"; // SMTP-Port
-        String username = "your_username";
-        String password = "your_password";
-        String fromAddress = "your_email@example.com";
-        String toAddress = "recipient@example.com";
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
-        // Erstellen Sie eine Sitzung mit den Mail-Einstellungen
-        Properties props = new Properties();
-        props.put("mail.smtp.host", smtpHost);
-        props.put("mail.smtp.port", smtpPort);
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+@Service
+public class MailService {
 
-        Session session = Session.getInstance(props, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
+    private final JavaMailSender javaMailSender;
+    
+    @Autowired
+    public MailService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
-        try {
-            // Erstellen Sie eine neue Nachricht
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(fromAddress));
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(toAddress));
-            message.setSubject("Test-E-Mail");
-            message.setText("Dies ist eine Testnachricht von Ihrem Java-Mail-Service.");
+    public void sendEmail(String to, String subject, String text) {
+    try {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(text, true); // Enable HTML content if needed
 
-            // Senden Sie die Nachricht
-            Transport.send(message);
-
-            System.out.println("Die E-Mail wurde erfolgreich gesendet.");
-
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            System.err.println("Fehler beim Senden der E-Mail: " + e.getMessage());
-        }
+        javaMailSender.send(message);
+    } catch (MailParseException e) {
+        e.printStackTrace();
+        throw new RuntimeException("Failed to parse email content", e);
+    } catch (MessagingException e) {
+        e.printStackTrace();
+        throw new RuntimeException("Failed to create email message", e);
+    } catch (MailAuthenticationException e) {
+        e.printStackTrace();
+        throw new RuntimeException("Authentication failed", e);
+    } catch (MailSendException e) {
+        e.printStackTrace();
+        throw new RuntimeException("Failed to send email", e);
+    } catch (MailException e) {
+        e.printStackTrace();
+        throw new RuntimeException("Mail error", e);
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Unexpected error", e);
     }
 }
