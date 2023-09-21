@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, request, jsonify, send_file
 from flask_restx import Api, Resource, fields
 from flask_swagger_ui import get_swaggerui_blueprint
@@ -32,7 +34,7 @@ class GetDocuments(Resource):
     @api.expect(ticker_parameter)
     def get(self):
         ticker = request.values.get('ticker').replace(':', '_')
-        filename = create(ticker)
+        filename = create_pdf(ticker)
         return send_file(filename)
 
 
@@ -42,33 +44,10 @@ class GetDocumentFilenames(Resource):
     def get(self):
         request_values = request.values
         ticker = request.values.get('ticker')
-        get_files(request_values.to_dict())
-        return {"Files succesfully downloaded"}
-#
-#
-#     def post(self):
-#         data = request.get_json()
-#         dict_keys = list(request.get_json().keys())
-#         if 'title' in dict_keys and 'content' in dict_keys:
-#             new_document = {
-#                 "id": len(documents) + 1,
-#                 "title": data['title'],
-#                 "content": data['content']
-#             }
-#             documents.append(new_document)
-#             return new_document, 201
-#         else:
-#             return jsonify({"error": "Missing 'title' or 'content' in request"}), 400
-#
-#
-# @api.route('/documents/<int:doc_id>')
-# class GetDocument(Resource):
-#     def get(self, doc_id):
-#         document = next((doc for doc in documents if doc['id'] == doc_id), None)
-#         if document:
-#             return jsonify(document)
-#         else:
-#             return jsonify({"error": "Document not found"}), 404
+        filenames = get_files(request_values.to_dict())
+        pdf_name= create_pdf(filenames)
+        print(pdf_name)
+        return send_file(pdf_name)
 
 
 if __name__ == '__main__':

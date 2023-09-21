@@ -1,7 +1,7 @@
 import os
 
-import requests
-from flask import Flask, request, send_file
+import requests as rq
+from flask import Flask, request, send_file, jsonify
 from flask_restx import Api, Resource, fields
 from flask_swagger_ui import get_swaggerui_blueprint
 import json
@@ -9,6 +9,7 @@ from AnalysisService import start_analysis_for_ticker
 from Path.paths import *
 from Utils.messages import *
 from Service.GetInformationService import *
+from Service.AuthenticationService import *
 
 app = Flask(__name__)
 api = Api(app)
@@ -40,81 +41,97 @@ file_name = api.model('Parameter', {
 
 if not os.path.exists('Graphs'):
     os.makedirs('Graphs')
-@api.route('/mail')
-class GetMail(Resource):
+
+
+@api.route('/testAuth')
+class TestAuth(Resource):
     def get(self):
-        URL = MAIL_SERVICE + 'get'
-        response = requests.get(URL)
-        return response.json()
+        if authenticate_user(request.values):
+            request_values = request.values
+            print(request_values)
+            return 'xy'
+        else:
+            return AUTHENTICATION_FAILED
 
 
 @api.route('/getStocksFromDatabase')
 class GetStocksFromDatabase(Resource):
     def get(self):
-        print(get_all_stocks_from_database())
-        return get_all_stocks_from_database()
+        if authenticate_user(request.values):
+            print(get_all_stocks_from_database())
+            return get_all_stocks_from_database()
+        else:
+            return AUTHENTICATION_FAILED
 
 
 @api.route('/getStockFromDatabase')
 class GetStockFromDatabase(Resource):
     @api.expect(ticker_parameter)
     def get(self):
-        request_values = request.values
-        if request.values.get('ticker') is not None:
-            try:
-                return stock_from_database(request_values.to_dict())
-            except Exception as e:
-                return {"Succesful": False, "Error": str(e)}
-        else:
-            return PASS_A_TICKERSYMBOL
+        if authenticate_user(request.values):
+            request_values = request.values
+            if request.values.get('ticker') is not None:
+                try:
+                    return stock_from_database(request_values.to_dict())
+                except Exception as e:
+                    return {"Succesful": False, "Error": str(e)}
+            else:
+                return PASS_A_TICKERSYMBOL
+        return AUTHENTICATION_FAILED
 
 
 @api.route('/startAnalysis')
 class StartAnalysis(Resource):
     @api.expect(ticker_parameter)
     def get(self):
-        request_values = request.values
-        if request_values.get('ticker') is not None:
-            try:
-                stock_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER,
-                                              params=request_values.to_dict())
-                stocks = stock_response.json()
-                return start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"])
-            except Exception as e:
-                return {"Succesful": False, "Error": str(e)}
-        else:
-            return PASS_A_TICKERSYMBOL
+        if authenticate_user(request.values):
+            request_values = request.values
+            if request_values.get('ticker') is not None:
+                try:
+                    stock_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER,
+                                                  params=request_values.to_dict())
+                    stocks = stock_response.json()
+                    return start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"])
+                except Exception as e:
+                    return {"Succesful": False, "Error": str(e)}
+            else:
+                return PASS_A_TICKERSYMBOL
+        return AUTHENTICATION_FAILED
 
 
 @api.route('/startAnalysis')
 class GetKpis(Resource):
     @api.expect(ticker_parameter)
     def get(self):
-        request_values = request.values
-        if request_values.get('ticker') is not None:
-            try:
-                kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
-                                            params=request_values.to_dict())
-                return kpi_response.json()
-            except Exception as e:
-                return {"Succesful": False, "Error": str(e)}
-        else:
-            return PASS_A_TICKERSYMBOL
+        if authenticate_user(request.values):
+            request_values = request.values
+            if request_values.get('ticker') is not None:
+                try:
+                    kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
+                                                params=request_values.to_dict())
+                    return kpi_response.json()
+                except Exception as e:
+                    return {"Succesful": False, "Error": str(e)}
+            else:
+                return PASS_A_TICKERSYMBOL
+        return AUTHENTICATION_FAILED
 
 
 @api.route('/getGraphs')
 class GetGraphs(Resource):
     @api.expect(file_name)
     def get(self):
-        if request.values.get('file_name') is not None:
-            file_name = request.values.get('file_name')
-            try:
-                if os.path.exists(file_name):
-                    return send_file(file_name)
-            except Exception as e:
-                return {"Succesful": False, "Error": str(e)}
-        else:
-            return PASS_A_FILENAME
+        if authenticate_user(request.values):
+            if request.values.get('file_name') is not None:
+                file_name = request.values.get('file_name')
+                try:
+                    if os.path.exists(file_name):
+                        return send_file(file_name)
+                except Exception as e:
+                    return {"Succesful": False, "Error": str(e)}
+            else:
+                return PASS_A_FILENAME
+        return AUTHENTICATION_FAILED
 
 
 if __name__ == '__main__':

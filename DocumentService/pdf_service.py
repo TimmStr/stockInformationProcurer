@@ -24,11 +24,14 @@ def deleteFiles(name):
 
 
 # Erstellen der PDF Datei
-def create(name):
+def create_pdf(file_names):
+    print('Filenmaes',file_names)
     # Abfrage ob der Ordner PDF im aktuellen Pfad existiert
     if not os.path.exists('PDF'):
         os.mkdir('PDF')
-
+    name = file_names[0].split('_')
+    name = ''.join(name[1:2])
+    print('Name',name)
     # Datum über die date.today Funktion abspeichern
     dateToday = str(date.today())
     # PDF Dateiname setzt sich aus dem Spaltennamen und dem heutigen Datum zusammen. Bsp. Northern_Hemisphere_2022-02-01
@@ -61,7 +64,7 @@ def create(name):
     Story.append(Paragraph(ptext, styles["Heading2"]))
     Story.append(Spacer(1, 12))
 
-    imageName = str(name) + '__18_09_2023 16-00-00.png'
+    imageName = file_names[0]
     # anhängen der STL-Decomposition Grafik in die Story
     im = Image(imageName, width=320, height=240)
     Story.append(im)
@@ -109,7 +112,7 @@ def create(name):
     Story.append(Spacer(1, 12))
 
     # Anhängen der partiellen Autokorrelationsgrafik
-    imageName = str(name) + '_volume_18_09_2023 16-00-00.png'
+    imageName = file_names[1]
     im = Image(imageName, width=320, height=240)
     Story.append(im)
 
@@ -125,11 +128,9 @@ def get_files(ticker):
     response_as_json = response.json()
     print('Response as json',response_as_json)
     filenames = response_as_json.get("Filename")
-    print(filenames)
     for filename in filenames:
         response = requests.get(STOCK_ANALYSIS_SERVICE + "/getGraphs",
                                 params={"file_name":filename})
         print('Filename',filename)
-        print(response.content)
         open(filename, 'wb').write(response.content)
     return filenames
