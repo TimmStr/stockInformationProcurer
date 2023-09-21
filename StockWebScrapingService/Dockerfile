@@ -5,12 +5,13 @@ WORKDIR /app
 
 # copy every content from the local file to the image
 COPY . /app
+COPY Scraper/stockinformationprocurer-f97f16464594.json stockinformationprocurer-f97f16464594.json
 
 # install the dependencies and packages in the requirements file
-RUN pip install -r document_requirements.txt
+RUN pip install -r scraping_requirements.txt
 
-# Port "9010" auf dem FLASK-APP läuft
-EXPOSE 9010
+# Port "9040" auf dem FLASK-APP läuft
+EXPOSE 9040
 
 # Starten der FLASK-App, wenn Contaianer ausgeführt wird
 CMD python ./app.py

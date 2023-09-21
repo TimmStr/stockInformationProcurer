@@ -19,41 +19,6 @@ services:
     networks:
       - ms-network
 
-#  adminer:
-#    image: adminer
-#    restart: always
-#    ports:
-#      - "9094:9094"
-#    command:
-#      - 'php'
-#      - '-S'
-#      - '[::]:9094'
-#      - '-t'
-#      - '/var/www/html'
-#    entrypoint:
-#      - 'entrypoint.sh'
-
-
-#  keycloak:
-#    image: jboss/keycloak
-#    restart: unless-stopped
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      KEYCLOAK_USER: admin
-#      KEYCLOAK_PASSWORD: admin
-#      DB_VENDOR: POSTGRES
-#      DB_ADDR: postgres
-#      DB_PORT: 5432
-#      DB_DATABASE: keycloak
-#      DB_USER: keycloak
-#      DB_PASSWORD: password
-#    depends_on:
-#      - postgres
-#    networks:
-#      - ms-network
-
-
 
   mongodb:
     image: mongo:latest
@@ -75,75 +40,67 @@ services:
       - "9010:9010"
 #    depends_on:
 #      - keycloak
+    environment:
+      - PYTHONUNBUFFERED=1
     networks:
       - ms-network
+#    deploy:
+#      replicas: 3
 
   mail-service:
     build: ./MailService
     restart: on-failure
     ports:
       - "9020:9020"
-    #    depends_on:
-    #      - mongodb
+#    depends_on:
+#      - mongodb
+#      - postgres
     networks:
       - ms-network
-
-
-#  stock-analysis-service:
-#    build: ./StockAnalysisService
-#    restart: on-failure
-#    ports:
-#      - "9030:9030"
-#    #    depends_on:
-#    #      - mongodb
-#    networks:
-#      - ms-network
+#    deploy:
+#      replicas: 3
 
   stock-analysis-service:
-    build: ./StockAnalysisServicePython
+    build: StockAnalysisService
     restart: on-failure
     ports:
       - "9030:9030"
-    #    depends_on:
-    #      - mongodb
-    networks:
-      - ms-network
-
-
-#  stock-web-scraping-service:
-#    build: ./StockWebScrapingServiceNew
-#    restart: on-failure
-#    ports:
-#      - "9040:9040"
-##    depends_on:
-##      - mongodb
-#    networks:
-#      - ms-network
-
-
-  stock-web-scraping-service-py:
-    build: ./StockWebScrapingServicePython
-    restart: on-failure
-    ports:
-      - "9040:9040"
-    #    depends_on:
-    #      - mongodb
+    depends_on:
+      - mongodb
     environment:
       - PYTHONUNBUFFERED=1
     networks:
       - ms-network
+#    deploy:
+#      replicas: 3
+
+  stock-web-scraping-service:
+    build: StockWebScrapingService
+    restart: on-failure
+    ports:
+      - "9040:9040"
+    depends_on:
+      - mongodb
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - ms-network
+#    deploy:
+#      replicas: 3
 
   user-service:
     build: ./UserService
     restart: on-failure
     ports:
       - "9050:9050"
-    #    depends_on:
-    #      - mongodb
+    depends_on:
+      - postgres
     environment:
       - PYTHONUNBUFFERED=1
     networks:
       - ms-network
+#    deploy:
+#      replicas: 3
 
 
 volumes:

@@ -1,6 +1,7 @@
 import com.stockInformationProcurer.controller.UserController;
 import com.stockInformationProcurer.entity.User;
 import com.stockInformationProcurer.services.UserService;
+import com.stockInformationProcurer.services.UserStockService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -9,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class UserControllerTest {
 
     @Mock
     private UserService userService;
+    @Mock
+    private UserStockService userStockService;
 
     @BeforeEach
     public void init() {
@@ -29,7 +33,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testAddUser() {
+    public void testAddUser() throws NoSuchAlgorithmException {
         ResponseEntity responseEntity = userController.addUser("John", "Doe", "john@example.com", "password", true);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -41,10 +45,10 @@ public class UserControllerTest {
         User user = new User("John", "Doe", "john@example.com", "password", true);
         when(userService.getUserByLastname("Doe")).thenReturn(user);
 
-        ResponseEntity responseEntity = userController.getUserInformation("Doe");
+        ResponseEntity responseEntity = userController.getUserByLastname("Doe");
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(user.toString(), responseEntity.getBody());
+        assertEquals(user, responseEntity.getBody());
     }
 
     @Test
@@ -61,21 +65,9 @@ public class UserControllerTest {
         assertEquals(users, responseEntity.getBody());
     }
 
-//    @Test
-//    public void testCheckUserFound() {
-//        User user = new User("John", "Doe", "john@example.com", "password");
-//        List<User> users = Arrays.asList(user);
-//
-//        when(userService.getAllUsers()).thenReturn(users);
-//
-//        ResponseEntity responseEntity = userController.checkUser("john@example.com", "password");
-//
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//        assertEquals(user, responseEntity.getBody());
-//    }
 
     @Test
-    public void testCheckUserNotFound() {
+    public void testCheckUserNotFound() throws NoSuchAlgorithmException {
         List<User> users = Arrays.asList(
                 new User("John", "Doe", "john@example.com", "password", true),
                 new User("Jane", "Smith", "jane@example.com", "password", true)
@@ -88,4 +80,24 @@ public class UserControllerTest {
         assertEquals(HttpStatus.NOT_ACCEPTABLE, responseEntity.getStatusCode());
         assertEquals("User not found", responseEntity.getBody());
     }
+
+    @Test
+    void testUpdateUserPassword() throws NoSuchAlgorithmException {
+        User user = new User("John", "Doe", "john@example.com", "old_password", true);
+        when(userService.updateUserPassword("john@example.com", "old_password", "new_password")).thenReturn(user);
+
+        ResponseEntity response = userController.updateUserPassword("john@example.com", "old_password", "new_password");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(user, response.getBody());
+    }
+
+    @Test
+    void testDeleteUsers() {
+        ResponseEntity response = userController.deleteUsers();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Users have been deleted", response.getBody());
+    }
+
 }
