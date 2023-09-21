@@ -38,7 +38,8 @@ file_name = api.model('Parameter', {
     'file_name': fields.String(required=True, description='Filename')
 })
 
-
+if not os.path.exists('Graphs'):
+    os.makedirs('Graphs')
 @api.route('/mail')
 class GetMail(Resource):
     def get(self):
@@ -78,14 +79,6 @@ class StartAnalysis(Resource):
                 stock_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER,
                                               params=request_values.to_dict())
                 stocks = stock_response.json()
-                # print(stocks["Ticker"])
-                # print(stocks["Stocks"])
-
-                # ToDo StockWebScrapingService muss umgebaut werden. Insbesonder gspread_scraper (jsonify)??? oder gleich als worksheet?
-                # kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
-                #                             params=request_values.to_dict())
-                # kpis = kpi_response.json()
-
                 return start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"])
             except Exception as e:
                 return {"Succesful": False, "Error": str(e)}
