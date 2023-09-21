@@ -10,6 +10,13 @@ from Path.paths import *
 from Utils.messages import *
 from Service.GetInformationService import *
 
+"""
+Builds a Flask app that runs a service in a docker container. The RESTful-Endpoints are been defined here via annotations as
+this is recommended by the Flask framework. The StockAnalysisService can be seen as the main entrypoint to the application as
+this service is pulling data through the other services and handles the main functions, e.g. StockAnalysis and drawing of plots.
+So this service is an important part of the architecture of this application.
+"""
+
 app = Flask(__name__)
 api = Api(app)
 app.config['JSON_SORT_KEYS'] = True
@@ -38,7 +45,7 @@ file_name = api.model('Parameter', {
     'file_name': fields.String(required=True, description='Filename')
 })
 
-
+# Endpoint for mail service
 @api.route('/mail')
 class GetMail(Resource):
     def get(self):
@@ -46,14 +53,14 @@ class GetMail(Resource):
         response = requests.get(URL)
         return response.json()
 
-
+# Endpoint to pull data from the database returns all data
 @api.route('/getStocksFromDatabase')
 class GetStocksFromDatabase(Resource):
     def get(self):
         print(get_all_stocks_from_database())
         return get_all_stocks_from_database()
 
-
+# Endpoint to pull data from the database returns data for a given ticker (specific stock)
 @api.route('/getStockFromDatabase')
 class GetStockFromDatabase(Resource):
     @api.expect(ticker_parameter)
@@ -67,7 +74,7 @@ class GetStockFromDatabase(Resource):
         else:
             return PASS_A_TICKERSYMBOL
 
-
+# Endpoint to call the analysis function
 @api.route('/startAnalysis')
 class StartAnalysis(Resource):
     @api.expect(ticker_parameter)
@@ -92,7 +99,7 @@ class StartAnalysis(Resource):
         else:
             return PASS_A_TICKERSYMBOL
 
-
+# Endpoint to call the analysis function
 @api.route('/startAnalysis')
 class GetKpis(Resource):
     @api.expect(ticker_parameter)
@@ -108,7 +115,7 @@ class GetKpis(Resource):
         else:
             return PASS_A_TICKERSYMBOL
 
-
+# # Endpoint to call the plot function
 @api.route('/getGraphs')
 class GetGraphs(Resource):
     @api.expect(file_name)

@@ -3,7 +3,19 @@ import json
 from matplotlib import pyplot as plt
 from Path.paths import GRAPHS
 
+"""
+Defines functions for 3 different porposes:
+    - Stock data by ticker and date
+    - Calling an analysis on specific stock data
+    - drawing graphs for the stock data
 
+ This can be seen as the main functions of the application. It returns relevant stock data for a given ticker like "NASDAQ:AMZN and analyzes
+ the data as well as drawing the data in plot. A ticker specifies a stock, when it's passed with an identifier for a specific stock exchange
+ like "NASDAQ" the Google Finance API will return the stock data in respect to the given stock exchange as prices and historic data can
+ vary between stock exchanges.
+"""
+
+# generates a filename for given ticker, date and volume
 def get_filename(ticker, date='', volume=''):
     ticker = ticker.replace(':', '_')
     date = date.replace('.', '_')
@@ -11,6 +23,7 @@ def get_filename(ticker, date='', volume=''):
     return GRAPHS + ticker + '_' + volume + '_' + date + ".png"
 
 
+# analyzes the data for a stock in respect to a given ticker
 def start_analysis_for_ticker(ticker, stocks):
     stocks = json.loads(stocks)
     print(stocks.keys())
@@ -36,7 +49,7 @@ def start_analysis_for_ticker(ticker, stocks):
     filename = draw_graph(ticker, date, close_val, high_val, volume)
     return {'Avg:': (sum(open_val) / len(open_val)), 'Max:': max(high_val), 'Min': min(low_val), 'Filename': filename}
 
-
+# draws a plot out of the data for a specific stock in respect to a given ticker
 def draw_graph(ticker, date, close_val, high_val, volume):
     filenames = []
     plt.plot(date, close_val, color='b', label='Close')

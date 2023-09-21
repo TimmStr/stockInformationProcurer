@@ -1,3 +1,7 @@
+"""
+Defined paths to endpoints and orchestred services
+"""
+
 STOCK_INFORMATION_PROCURER = "stockinformationprocurer"
 
 
