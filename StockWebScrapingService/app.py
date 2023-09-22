@@ -35,8 +35,9 @@ ticker_parameter = api.model('Parameter', {
 class GetStockFromTicker(Resource):
     @api.expect(ticker_parameter)
     def get(self):
-        ticker = request.values.get('ticker')
-        if ticker:
+        request_values = request.values
+        ticker = request_values.get('ticker')
+        if ticker is not None:
             try:
                 return {"Ticker": ticker, "Stocks": get_stock_data_as_json(ticker)}
             except Exception as e:
@@ -49,7 +50,9 @@ class GetStockFromTicker(Resource):
 class GetKpisFromTicker(Resource):
     @api.expect(ticker_parameter)
     def get(self):
-        if request.values.get('ticker') is not None:
+        request_values = request.values
+        print(request_values)
+        if request_values.get('ticker') is not None:
             try:
                 return {"KPIs": get_kpis_as_dict(request.values.get('ticker'))}
             except Exception as e:

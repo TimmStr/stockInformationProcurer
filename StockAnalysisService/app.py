@@ -5,7 +5,7 @@ from flask import Flask, request, send_file, jsonify
 from flask_restx import Api, Resource, fields
 from flask_swagger_ui import get_swaggerui_blueprint
 import json
-from AnalysisService import start_analysis_for_ticker
+from AnalysisService import *
 from Path.paths import *
 from Utils.messages import *
 from Service.GetInformationService import *
@@ -91,32 +91,23 @@ class StartAnalysis(Resource):
                     stock_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER,
                                                   params=request_values.to_dict())
                     stocks = stock_response.json()
-                    print('Analysis',start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"]))
                     return start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"])
                 except Exception as e:
                     return {"Succesful": False, "Error": str(e)}
             else:
+                print('Fehler mit ticker is none',request_values)
                 return PASS_A_TICKERSYMBOL
         return AUTHENTICATION_FAILED
 
-
-# @api.route('/startAnalysis')
-# class GetKpis(Resource):
-#     @api.expect(ticker_parameter)
-#     def get(self):
-#         if authenticate_user(request.values):
-#             request_values = request.values
-#             if request_values.get('ticker') is not None:
-#                 try:
-#                     kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
-#                                                 params=request_values.to_dict())
-#                     return kpi_response.json()
-#                 except Exception as e:
-#                     return {"Succesful": False, "Error": str(e)}
-#             else:
-#                 return PASS_A_TICKERSYMBOL
-#         return AUTHENTICATION_FAILED
-
+@api.route('/deleteFiles')
+class DeleteFiles(Resource):
+    @api.expect(file_name)
+    def get(self):
+        try:
+            os.remove(file_name)
+            return {"Succesful": "True"}
+        except Exception as e:
+            return {"Succesful": False, "Error": str(e)}
 
 @api.route('/getGraphs')
 class GetGraphs(Resource):

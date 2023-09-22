@@ -8,6 +8,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 import os
 from Utils.paths import *
+import json
 
 
 # Funktion zum löschen der Bilder
@@ -31,6 +32,7 @@ def create_pdf(file_names, avg_value, max_value, min_value):
     name = file_names[0].split('_')
     name = ''.join(name[1:2])
     print('Name', name)
+    print('Filenames',file_names)
     # Datum über die date.today Funktion abspeichern
     dateToday = str(date.today())
     # PDF Dateiname setzt sich aus dem Spaltennamen und dem heutigen Datum zusammen. Bsp. Northern_Hemisphere_2022-02-01
@@ -58,12 +60,19 @@ def create_pdf(file_names, avg_value, max_value, min_value):
     Story.append(Paragraph(ptext, styles["Normal"]))
     Story.append(Spacer(1, 12))
 
-    ptext = 'KPIs: Avg: %s <br /> Max: %s <br /> Min: %s <br /> ' % (
+    ptext = 'KPIs: <br /> '
+    Story.append(Paragraph(ptext, styles["Heading2"]))
+    Story.append(Spacer(1, 12))
+
+    Story.append(Paragraph(ptext, styles["Normal"]))
+    Story.append(Spacer(1, 12))
+    # Abfragen ob Werte wie Test Statistic und p-Wer grenzen überschreiten
+    # Je nach Fall wird dann Stationarität oder nicht Stationarität ausgegeben
+
+    ptext = 'Avg: %s <br /> Max: %s <br /> Min: %s <br /> ' % (
         avg_value,
         max_value,
         min_value)
-    Story.append(Paragraph(ptext, styles["Heading2"]))
-    Story.append(Spacer(1, 12))
 
     imageName = file_names[0]
     # anhängen der STL-Decomposition Grafik in die Story
@@ -124,10 +133,12 @@ def create_pdf(file_names, avg_value, max_value, min_value):
 
 
 def get_files(ticker):
+    print(type(ticker), ticker)
     response = requests.get(STOCK_ANALYSIS_SERVICE + "/startAnalysis",
                             params=ticker)
+
     response_as_json = response.json()
-    print('Response as json xyz', response_as_json)
+    print('Doc Response as json', response_as_json)
     filenames = response_as_json.get("Filename")
     avg_value = response_as_json.get("Avg")
     max_value = response_as_json.get("Max")
@@ -135,10 +146,12 @@ def get_files(ticker):
     print('AVg', avg_value, 'Max', max_value, 'Min', min_value)
     print("mail", ticker.get("mail"))
     print("password",ticker.get("password"))
+
     for filename in filenames:
+        ticker["file_name"] = filename
+        print(ticker)
         response = requests.get(STOCK_ANALYSIS_SERVICE + "/getGraphs",
-                                params={"mail": ticker.get("mail"), "password": ticker.get("password"),
-                                        "file_name": filename})
+                                params=ticker)
         print('Filename', filename)
         open(filename, 'wb').write(response.content)
     return filenames, avg_value, max_value, min_value

@@ -40,11 +40,10 @@ class GetDocuments(Resource):
 
 
 @api.route('/createPdf')
-class GetDocumentFilenames(Resource):
+class CreatePdf(Resource):
     @api.expect(ticker_parameter)
     def get(self):
         request_values = request.values
-        ticker = request.values.get('ticker')
         filenames, avg_value, max_value, min_value = get_files(request_values.to_dict())
         pdf_name = create_pdf(filenames, avg_value, max_value, min_value)
         print(pdf_name)
