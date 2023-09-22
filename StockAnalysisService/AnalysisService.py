@@ -6,6 +6,19 @@ from Path.paths import GRAPHS
 import numpy as np
 import time
 
+"""
+Defines functions for 3 different porposes:
+    - Stock data by ticker and date
+    - Calling an analysis on specific stock data
+    - drawing graphs for the stock data
+
+ This can be seen as the main functions of the application. It returns relevant stock data for a given ticker like "NASDAQ:AMZN and analyzes
+ the data as well as drawing the data in plot. A ticker specifies a stock, when it's passed with an identifier for a specific stock exchange
+ like "NASDAQ" the Google Finance API will return the stock data in respect to the given stock exchange as prices and historic data can
+ vary between stock exchanges.
+"""
+
+# generates a filename for given ticker, date and volume
 
 def get_filename(ticker, date='', volume=''):
     ticker = ticker.replace(':', '_')
