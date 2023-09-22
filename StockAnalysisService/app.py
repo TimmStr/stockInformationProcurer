@@ -91,6 +91,7 @@ class StartAnalysis(Resource):
                     stock_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER,
                                                   params=request_values.to_dict())
                     stocks = stock_response.json()
+                    print('Analysis',start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"]))
                     return start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"])
                 except Exception as e:
                     return {"Succesful": False, "Error": str(e)}
@@ -99,22 +100,22 @@ class StartAnalysis(Resource):
         return AUTHENTICATION_FAILED
 
 
-@api.route('/startAnalysis')
-class GetKpis(Resource):
-    @api.expect(ticker_parameter)
-    def get(self):
-        if authenticate_user(request.values):
-            request_values = request.values
-            if request_values.get('ticker') is not None:
-                try:
-                    kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
-                                                params=request_values.to_dict())
-                    return kpi_response.json()
-                except Exception as e:
-                    return {"Succesful": False, "Error": str(e)}
-            else:
-                return PASS_A_TICKERSYMBOL
-        return AUTHENTICATION_FAILED
+# @api.route('/startAnalysis')
+# class GetKpis(Resource):
+#     @api.expect(ticker_parameter)
+#     def get(self):
+#         if authenticate_user(request.values):
+#             request_values = request.values
+#             if request_values.get('ticker') is not None:
+#                 try:
+#                     kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
+#                                                 params=request_values.to_dict())
+#                     return kpi_response.json()
+#                 except Exception as e:
+#                     return {"Succesful": False, "Error": str(e)}
+#             else:
+#                 return PASS_A_TICKERSYMBOL
+#         return AUTHENTICATION_FAILED
 
 
 @api.route('/getGraphs')

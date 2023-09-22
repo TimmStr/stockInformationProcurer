@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify, send_file
 from flask_restx import Api, Resource, fields
 from flask_swagger_ui import get_swaggerui_blueprint
 from pdf_service import *
+
 app = Flask(__name__)
 api = Api(app)
 app.config['JSON_SORT_KEYS'] = True
@@ -38,14 +39,14 @@ class GetDocuments(Resource):
         return send_file(filename)
 
 
-@api.route('/test_document_filenames')
+@api.route('/createPdf')
 class GetDocumentFilenames(Resource):
     @api.expect(ticker_parameter)
     def get(self):
         request_values = request.values
         ticker = request.values.get('ticker')
-        filenames = get_files(request_values.to_dict())
-        pdf_name= create_pdf(filenames)
+        filenames, avg_value, max_value, min_value = get_files(request_values.to_dict())
+        pdf_name = create_pdf(filenames, avg_value, max_value, min_value)
         print(pdf_name)
         return send_file(pdf_name)
 

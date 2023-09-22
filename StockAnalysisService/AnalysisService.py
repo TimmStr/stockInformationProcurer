@@ -34,7 +34,7 @@ def start_analysis_for_ticker(ticker, stocks):
     print('Volume', len(volume), volume[:5])
 
     filename = draw_graph(ticker, date, close_val, high_val, volume)
-    return {'Avg:': (sum(open_val) / len(open_val)), 'Max:': max(high_val), 'Min': min(low_val), 'Filename': filename}
+    return {'Avg': (sum(open_val) / len(open_val)), 'Max': max(high_val), 'Min': min(low_val), 'Filename': filename}
 
 
 def draw_graph(ticker, date, close_val, high_val, volume):

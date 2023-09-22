@@ -24,14 +24,13 @@ def deleteFiles(name):
 
 
 # Erstellen der PDF Datei
-def create_pdf(file_names):
-    print('Filenmaes',file_names)
+def create_pdf(file_names, avg_value, max_value, min_value):
     # Abfrage ob der Ordner PDF im aktuellen Pfad existiert
     if not os.path.exists('PDF'):
         os.mkdir('PDF')
     name = file_names[0].split('_')
     name = ''.join(name[1:2])
-    print('Name',name)
+    print('Name', name)
     # Datum über die date.today Funktion abspeichern
     dateToday = str(date.today())
     # PDF Dateiname setzt sich aus dem Spaltennamen und dem heutigen Datum zusammen. Bsp. Northern_Hemisphere_2022-02-01
@@ -48,7 +47,7 @@ def create_pdf(file_names):
     styles = getSampleStyleSheet()
 
     # Überschrift
-    ptext = 'Bericht für die Region: ' + name
+    ptext = 'Report for: ' + name
     Story.append(Paragraph(ptext, styles["Title"]))
     # Spacer ist der Abstand zum nächsten Absatz
     Story.append(Spacer(1, 12))
@@ -59,8 +58,10 @@ def create_pdf(file_names):
     Story.append(Paragraph(ptext, styles["Normal"]))
     Story.append(Spacer(1, 12))
 
-    # STL Decomposition
-    ptext = 'STL Decomposition der Region : %s' % (str(name))
+    ptext = 'KPIs: Avg: %s <br /> Max: %s <br /> Min: %s <br /> ' % (
+        avg_value,
+        max_value,
+        min_value)
     Story.append(Paragraph(ptext, styles["Heading2"]))
     Story.append(Spacer(1, 12))
 
@@ -126,11 +127,18 @@ def get_files(ticker):
     response = requests.get(STOCK_ANALYSIS_SERVICE + "/startAnalysis",
                             params=ticker)
     response_as_json = response.json()
-    print('Response as json',response_as_json)
+    print('Response as json xyz', response_as_json)
     filenames = response_as_json.get("Filename")
+    avg_value = response_as_json.get("Avg")
+    max_value = response_as_json.get("Max")
+    min_value = response_as_json.get("Min")
+    print('AVg', avg_value, 'Max', max_value, 'Min', min_value)
+    print("mail", ticker.get("mail"))
+    print("password",ticker.get("password"))
     for filename in filenames:
         response = requests.get(STOCK_ANALYSIS_SERVICE + "/getGraphs",
-                                params={"file_name":filename})
-        print('Filename',filename)
+                                params={"mail": ticker.get("mail"), "password": ticker.get("password"),
+                                        "file_name": filename})
+        print('Filename', filename)
         open(filename, 'wb').write(response.content)
-    return filenames
+    return filenames, avg_value, max_value, min_value
