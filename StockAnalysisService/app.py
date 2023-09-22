@@ -91,7 +91,7 @@ class StartAnalysis(Resource):
                     stock_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER,
                                                   params=request_values.to_dict())
                     stocks = stock_response.json()
-                    return start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"])
+                    return start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"],request_values)
                 except Exception as e:
                     return {"Succesful": False, "Error": str(e)}
             else:

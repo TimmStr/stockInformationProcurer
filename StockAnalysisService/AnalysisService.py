@@ -52,11 +52,13 @@ def data_for_time_period(start_date, end_date, dates, open_vals, high_vals, low_
            volume_vals_for_time_period
 
 
-def start_analysis_for_ticker(ticker, stocks):
+def start_analysis_for_ticker(ticker, stocks, request_values):
     stocks = json.loads(stocks)
-    if 'start_date' in stocks.keys() and 'end_date' in stocks.keys():
-        start_date = stocks['start_date']
-        end_date = stocks['end_date']
+    print(request_values.keys())
+
+    if 'start_date' in request_values.keys() and 'end_date' in request_values.keys():
+        start_date = request_values['start_date']
+        end_date = request_values['end_date']
     else:
         end_date = datetime.today()
         end_date = end_date.strftime('%d-%m-%Y')
