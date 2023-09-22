@@ -9,6 +9,7 @@ from AnalysisService import start_analysis_for_ticker
 from Path.paths import *
 from Utils.messages import *
 from Service.GetInformationService import *
+from Service.AuthenticationService import *
 
 """
 Builds a Flask app that runs a service in a docker container. The RESTful-Endpoints are been defined here via annotations as
@@ -45,90 +46,91 @@ file_name = api.model('Parameter', {
     'file_name': fields.String(required=True, description='Filename')
 })
 
-# Endpoint for mail service
-@api.route('/mail')
-class GetMail(Resource):
+if not os.path.exists('Graphs'):
+    os.makedirs('Graphs')
+
+
+@api.route('/testAuth')
+class TestAuth(Resource):
     def get(self):
-        URL = MAIL_SERVICE + 'get'
-        response = requests.get(URL)
-        return response.json()
+        if authenticate_user(request.values):
+            request_values = request.values
+            print(request_values)
+            return 'xy'
+        else:
+            return AUTHENTICATION_FAILED
 
 # Endpoint to pull data from the database returns all data
 @api.route('/getStocksFromDatabase')
 class GetStocksFromDatabase(Resource):
     def get(self):
-        print(get_all_stocks_from_database())
-        return get_all_stocks_from_database()
+        if authenticate_user(request.values):
+            print(get_all_stocks_from_database())
+            return get_all_stocks_from_database()
+        else:
+            return AUTHENTICATION_FAILED
 
 # Endpoint to pull data from the database returns data for a given ticker (specific stock)
 @api.route('/getStockFromDatabase')
 class GetStockFromDatabase(Resource):
     @api.expect(ticker_parameter)
     def get(self):
-        request_values = request.values
-        if request.values.get('ticker') is not None:
-            try:
-                return stock_from_database(request_values.to_dict())
-            except Exception as e:
-                return {"Succesful": False, "Error": str(e)}
-        else:
-            return PASS_A_TICKERSYMBOL
+        if authenticate_user(request.values):
+            request_values = request.values
+            if request.values.get('ticker') is not None:
+                try:
+                    return stock_from_database(request_values.to_dict())
+                except Exception as e:
+                    return {"Succesful": False, "Error": str(e)}
+            else:
+                return PASS_A_TICKERSYMBOL
+        return AUTHENTICATION_FAILED
 
 # Endpoint to call the analysis function
 @api.route('/startAnalysis')
 class StartAnalysis(Resource):
     @api.expect(ticker_parameter)
     def get(self):
-        request_values = request.values
-        if request_values.get('ticker') is not None:
-            try:
-                stock_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER,
-                                              params=request_values.to_dict())
-                stocks = stock_response.json()
-                # print(stocks["Ticker"])
-                # print(stocks["Stocks"])
+        if authenticate_user(request.values):
+            request_values = request.values
+            if request_values.get('ticker') is not None:
+                try:
+                    stock_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_STOCK_FROM_TICKER,
+                                                  params=request_values.to_dict())
+                    stocks = stock_response.json()
+                    return start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"],request_values)
+                except Exception as e:
+                    return {"Succesful": False, "Error": str(e)}
+            else:
+                print('Fehler mit ticker is none',request_values)
+                return PASS_A_TICKERSYMBOL
+        return AUTHENTICATION_FAILED
 
-                # ToDo StockWebScrapingService muss umgebaut werden. Insbesonder gspread_scraper (jsonify)??? oder gleich als worksheet?
-                # kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
-                #                             params=request_values.to_dict())
-                # kpis = kpi_response.json()
-
-                return start_analysis_for_ticker(stocks["Ticker"], stocks["Stocks"])
-            except Exception as e:
-                return {"Succesful": False, "Error": str(e)}
-        else:
-            return PASS_A_TICKERSYMBOL
-
-# Endpoint to call the analysis function
-@api.route('/startAnalysis')
-class GetKpis(Resource):
-    @api.expect(ticker_parameter)
+@api.route('/deleteFiles')
+class DeleteFiles(Resource):
+    @api.expect(file_name)
     def get(self):
-        request_values = request.values
-        if request_values.get('ticker') is not None:
-            try:
-                kpi_response = requests.get(STOCK_WEB_SCRAPING_SERVICE_GET_KPIS_FROM_TICKER,
-                                            params=request_values.to_dict())
-                return kpi_response.json()
-            except Exception as e:
-                return {"Succesful": False, "Error": str(e)}
-        else:
-            return PASS_A_TICKERSYMBOL
+        try:
+            os.remove(file_name)
+            return {"Succesful": "True"}
+        except Exception as e:
+            return {"Succesful": False, "Error": str(e)}
 
-# # Endpoint to call the plot function
 @api.route('/getGraphs')
 class GetGraphs(Resource):
     @api.expect(file_name)
     def get(self):
-        if request.values.get('file_name') is not None:
-            file_name = request.values.get('file_name')
-            try:
-                if os.path.exists(file_name):
-                    return send_file(file_name)
-            except Exception as e:
-                return {"Succesful": False, "Error": str(e)}
-        else:
-            return PASS_A_FILENAME
+        if authenticate_user(request.values):
+            if request.values.get('file_name') is not None:
+                file_name = request.values.get('file_name')
+                try:
+                    if os.path.exists(file_name):
+                        return send_file(file_name)
+                except Exception as e:
+                    return {"Succesful": False, "Error": str(e)}
+            else:
+                return PASS_A_FILENAME
+        return AUTHENTICATION_FAILED
 
 
 if __name__ == '__main__':

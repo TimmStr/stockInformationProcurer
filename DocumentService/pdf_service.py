@@ -8,6 +8,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 import os
 from Utils.paths import *
+import json
 
 
 # Funktion zum löschen der Bilder
@@ -24,11 +25,14 @@ def deleteFiles(name):
 
 
 # Erstellen der PDF Datei
-def create(name):
+def create_pdf(file_names, avg_value, max_value, min_value):
     # Abfrage ob der Ordner PDF im aktuellen Pfad existiert
     if not os.path.exists('PDF'):
         os.mkdir('PDF')
-
+    name = file_names[0].split('_')
+    name = ''.join(name[1:2])
+    print('Name', name)
+    print('Filenames',file_names)
     # Datum über die date.today Funktion abspeichern
     dateToday = str(date.today())
     # PDF Dateiname setzt sich aus dem Spaltennamen und dem heutigen Datum zusammen. Bsp. Northern_Hemisphere_2022-02-01
@@ -45,7 +49,7 @@ def create(name):
     styles = getSampleStyleSheet()
 
     # Überschrift
-    ptext = 'Bericht für die Region: ' + name
+    ptext = 'Report for: ' + name
     Story.append(Paragraph(ptext, styles["Title"]))
     # Spacer ist der Abstand zum nächsten Absatz
     Story.append(Spacer(1, 12))
@@ -56,12 +60,22 @@ def create(name):
     Story.append(Paragraph(ptext, styles["Normal"]))
     Story.append(Spacer(1, 12))
 
-    # STL Decomposition
-    ptext = 'STL Decomposition der Region : %s' % (str(name))
+    ptext = 'KPIs: <br /> '
     Story.append(Paragraph(ptext, styles["Heading2"]))
     Story.append(Spacer(1, 12))
 
-    imageName = str(name) + '__18_09_2023 16-00-00.png'
+    ptext = 'Avg: %s <br /> Max: %s <br /> Min: %s <br /> ' % (
+        str(avg_value),
+        str(max_value),
+        str(min_value))
+    Story.append(Paragraph(ptext, styles["Normal"]))
+    Story.append(Spacer(1, 12))
+    # Abfragen ob Werte wie Test Statistic und p-Wer grenzen überschreiten
+    # Je nach Fall wird dann Stationarität oder nicht Stationarität ausgegeben
+
+
+
+    imageName = file_names[0]
     # anhängen der STL-Decomposition Grafik in die Story
     im = Image(imageName, width=320, height=240)
     Story.append(im)
@@ -109,7 +123,7 @@ def create(name):
     Story.append(Spacer(1, 12))
 
     # Anhängen der partiellen Autokorrelationsgrafik
-    imageName = str(name) + '_volume_18_09_2023 16-00-00.png'
+    imageName = file_names[1]
     im = Image(imageName, width=320, height=240)
     Story.append(im)
 
@@ -120,16 +134,25 @@ def create(name):
 
 
 def get_files(ticker):
+    print(type(ticker), ticker)
     response = requests.get(STOCK_ANALYSIS_SERVICE + "/startAnalysis",
                             params=ticker)
+
     response_as_json = response.json()
-    print('Response as json',response_as_json)
+    print('Doc Response as json', response_as_json)
     filenames = response_as_json.get("Filename")
-    print(filenames)
+    avg_value = response_as_json.get("Avg")
+    max_value = response_as_json.get("Max")
+    min_value = response_as_json.get("Min")
+    print('AVg', avg_value, 'Max', max_value, 'Min', min_value)
+    print("mail", ticker.get("mail"))
+    print("password",ticker.get("password"))
+
     for filename in filenames:
+        ticker["file_name"] = filename
+        print(ticker)
         response = requests.get(STOCK_ANALYSIS_SERVICE + "/getGraphs",
-                                params={"file_name":filename})
-        print('Filename',filename)
-        print(response.content)
+                                params=ticker)
+        print('Filename', filename)
         open(filename, 'wb').write(response.content)
-    return filenames
+    return filenames, avg_value, max_value, min_value
