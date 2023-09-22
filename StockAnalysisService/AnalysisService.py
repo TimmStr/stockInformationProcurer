@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from matplotlib import pyplot as plt
 from Path.paths import GRAPHS
+import numpy as np
 import time
 
 
@@ -79,31 +80,52 @@ def start_analysis_for_ticker(ticker, stocks, request_values):
                             high_vals_for_time_period, volume_vals_for_time_period)
     print('Avg', str((sum(open_vals_for_time_period) / len(open_vals_for_time_period))), 'Max',
           str(max(high_vals_for_time_period)), 'Min', str(min(low_vals_for_time_period)), 'Filename', file_names)
-    return {'Avg': (sum(open_vals_for_time_period) / len(open_vals_for_time_period)),
-            'Max': max(high_vals_for_time_period),
-            'Min': min(low_vals_for_time_period), 'Filename': file_names}
+    return {'Avg': format((sum(open_vals_for_time_period) / len(open_vals_for_time_period)),'.2f'),
+            'Max': format(max(high_vals_for_time_period),'.2f'),
+            'Min': format(min(low_vals_for_time_period),'.2f'), 'Filename': file_names}
 
 
-def draw_graph(ticker, date, close_vals, low_vals, high_vals, volume_vals):
+def get_x_axis(dates):
+    dates_length = len(dates)
+    if dates_length < 8:
+        return dates
+    else:
+        new_date_indices = []
+        x = int(dates_length / 8)
+        print(x)
+
+        for i, date in enumerate(dates):
+            print(str(i), str(x), str(i / x), str(i % x))
+            if i % x == 0 or i == 0:
+                new_date_indices.append(date[2:])
+        return new_date_indices
+
+
+def draw_graph(ticker, dates, close_vals, low_vals, high_vals, volume_vals):
     filenames = []
-    plt.plot(date, close_vals, color='b', label='Close')
-    plt.plot(date, high_vals, color='g', label='High')
-    plt.plot(date, low_vals, color='r', label='Low')
+    new_date_indices = get_x_axis(dates)
+    plt.title(ticker + '  Daily price: ' + 'Start:' + str(dates[0]) + ' - End:' + str(dates[-1]))
+    plt.plot(dates, close_vals, color='b', label='Close')
+    plt.plot(dates, high_vals, color='g', label='High')
+    plt.plot(dates, low_vals, color='r', label='Low')
     plt.xlabel("Day")
     plt.ylabel("Price $")
     # plt.grid(True)
     plt.legend()
-    filename = get_filename(ticker, str(date[-1]))
+    plt.xticks(np.arange(0, len(dates), int(len(dates) / 8)), new_date_indices, rotation=30)
+    filename = get_filename(ticker, str(dates[-1]))
     plt.savefig(filename)
     filenames.append(filename)
     plt.clf()
 
-    plt.plot(date, volume_vals, color='b', label='Volume')
+    plt.plot(dates, volume_vals, color='b', label='Volume')
+    plt.title(ticker + '  Daily volume: ' + 'Start:' + str(dates[0]) + ' - End:' + str(dates[-1]))
     plt.xlabel("Day")
     plt.ylabel("Volume")
     # plt.grid(True)
     plt.legend()
-    filename = get_filename(ticker, str(date[-1]), '_volume')
+    plt.xticks(np.arange(0, len(dates), int(len(dates) / 8)), new_date_indices, rotation=30)
+    filename = get_filename(ticker, str(dates[-1]), '_volume')
     plt.savefig(filename)
     filenames.append(filename)
     plt.clf()
