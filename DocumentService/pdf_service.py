@@ -64,15 +64,16 @@ def create_pdf(file_names, avg_value, max_value, min_value):
     Story.append(Paragraph(ptext, styles["Heading2"]))
     Story.append(Spacer(1, 12))
 
+    ptext = 'Avg: %s <br /> Max: %s <br /> Min: %s <br /> ' % (
+        str(avg_value),
+        str(max_value),
+        str(min_value))
     Story.append(Paragraph(ptext, styles["Normal"]))
     Story.append(Spacer(1, 12))
     # Abfragen ob Werte wie Test Statistic und p-Wer grenzen überschreiten
     # Je nach Fall wird dann Stationarität oder nicht Stationarität ausgegeben
 
-    ptext = 'Avg: %s <br /> Max: %s <br /> Min: %s <br /> ' % (
-        avg_value,
-        max_value,
-        min_value)
+
 
     imageName = file_names[0]
     # anhängen der STL-Decomposition Grafik in die Story
