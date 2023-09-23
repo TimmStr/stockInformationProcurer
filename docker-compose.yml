@@ -47,6 +47,20 @@ services:
 #    deploy:
 #      replicas: 3
 
+  frontend:
+    build: ./FrontendFlask/client
+    restart: on-failure
+    ports:
+      - "80:80"
+    depends_on:
+      - stock-analysis-service
+    environment:
+      - PYTHONBUFFERED=1
+    networks:
+      - ms-network
+#    deploy:
+#      replicas: 3
+
   mail-service:
     build: ./MailService
     restart: on-failure
