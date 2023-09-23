@@ -12,7 +12,7 @@
     <artifactId>mailService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mailService</name>
-    <description>Mailservice to send news to customers</description>
+    <description>MailService to send news to customers</description>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -63,7 +63,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>   
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
     </dependencies>
 
     <build>

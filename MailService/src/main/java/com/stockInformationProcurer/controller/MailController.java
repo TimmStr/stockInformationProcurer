@@ -15,7 +15,7 @@ public class MailController {
     private final MailService mailService;
 
     @Autowired
-    public EmailController(MailService mailService) {
+    public MailController(MailService mailService) {
         this.mailService = mailService;
     }
 
@@ -27,11 +27,11 @@ public class MailController {
     @PostMapping("/send")
     public String sendEmail(
         @RequestParam String to,
-        @RequestParam String subjcet,
+        @RequestParam String subject,
         @RequestParam String text) {
 
-            mailService.sendEmail(to, subject, text);
-            return "Email sent successfully!"
+        mailService.sendEmail(to, subject, text);
+            return "Email sent successfully!";
         }
 }
 
