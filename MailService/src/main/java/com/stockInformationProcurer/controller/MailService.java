@@ -8,6 +8,7 @@ package com.stockInformationProcurer.controller;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailParseException;
@@ -26,13 +27,14 @@ public class MailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sendEmail(String to, String subject, String text) {
+    public void sendEmail(String to, String subject, String text, byte[] attachment, String attachmentName) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(text, true); // Enable HTML content if needed
+            helper.addAttachment(attachmentName, new ByteArrayResource(attachment));
 
             javaMailSender.send(message);
         } catch (MailParseException e) {
