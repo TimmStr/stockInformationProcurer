@@ -5,6 +5,7 @@ import com.stockInformationProcurer.services.UserServiceConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,12 +49,11 @@ public class MailController {
         return userServiceConnection.getAllStocksForUserFromUserService(mail, password);
     }
 
+    @Scheduled(cron = "0 0 20 * * 1") // every monday at 20:00
     @RequestMapping(value = "/sendMailToAllStocksForAllUsers", method = RequestMethod.GET)
     public ResponseEntity sendMailToAllStocksForAllUsers() throws JsonProcessingException {
         UserServiceConnection userServiceConnection = new UserServiceConnection(this.mailService);
         return userServiceConnection.sendMailtoAllUserSubscribers();
-
-
     }
 }
 

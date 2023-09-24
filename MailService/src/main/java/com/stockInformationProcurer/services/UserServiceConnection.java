@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stockInformationProcurer.controller.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +116,12 @@ public class UserServiceConnection {
             if (obj.containsKey("stockSymbol") && obj.containsKey("mail")) {
                 String stockSymbol = (String) obj.get("stockSymbol");
                 String mail = (String) obj.get("mail");
-                byte[] pdf = documentServiceConnection.createAndReturnPdf(stockSymbol);
+
+                LocalDate end_date= java.time.LocalDate.now();
+                LocalDate start_date= end_date.minusDays(30);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+                byte[] pdf = documentServiceConnection.createAndReturnPdfForTimeFrame(stockSymbol, start_date.format(formatter), end_date.format(formatter));
                 if (pdf != null) {
                     mailService.sendEmail(mail, "Stock report for " + stockSymbol, "The pdf file is attached to the mail.", pdf, stockSymbol + ".pdf");
                 } else {
@@ -123,7 +131,7 @@ public class UserServiceConnection {
                 return new ResponseEntity<>("No mails have been sent", HttpStatus.OK);
             }
         }
-        return new ResponseEntity<>("Mail have been sent", HttpStatus.OK);
+        return new ResponseEntity<>("Mails have been sent", HttpStatus.OK);
 
     }
 }
