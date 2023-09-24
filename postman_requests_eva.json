@@ -14,7 +14,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9040/get_all_stocks"
+						"url": "http://localhost:9040/getAllStocks"
 					},
 					"response": []
 				},
@@ -24,14 +24,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9040/get_stock_from_ticker?ticker=NASDAQ:GOOGL",
+							"raw": "http://localhost:9040/getStockFromTicker?ticker=NASDAQ:GOOGL",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "9040",
 							"path": [
-								"get_stock_from_ticker"
+								"getStockFromTicker"
 							],
 							"query": [
 								{
@@ -46,22 +46,22 @@
 				{
 					"name": "Save Stock in Database",
 					"request": {
-						"method": "GET",
+						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9040/save_stock?ticker=NASDAQ:GOOGL",
+							"raw": "http://localhost:9040/saveStock?ticker=NASDAQ:NVDA",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "9040",
 							"path": [
-								"save_stock"
+								"saveStock"
 							],
 							"query": [
 								{
 									"key": "ticker",
-									"value": "NASDAQ:GOOGL"
+									"value": "NASDAQ:NVDA"
 								}
 							]
 						}
@@ -73,7 +73,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9040/delete_all_stocks"
+						"url": "http://localhost:9040/deleteAllStocks"
 					},
 					"response": []
 				},
@@ -101,6 +101,31 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Stock from symbol out ofMongo DB ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9040/get_stocks_from_database_with_ticker?ticker=NASDAQ:AAPL",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9040",
+							"path": [
+								"get_stocks_from_database_with_ticker"
+							],
+							"query": [
+								{
+									"key": "ticker",
+									"value": "NASDAQ:AAPL"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -119,6 +144,90 @@
 						"method": "GET",
 						"header": [],
 						"url": "http://localhost:9010/get"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Documents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9010/documents?ticker=NASDAQ:NVDA",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"documents"
+							],
+							"query": [
+								{
+									"key": "ticker",
+									"value": "NASDAQ:NVDA"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Document",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"König von Deutschland\",\r\n    \"content\":\"Deutschland ist auf dem absteigenden Ast\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9010/documents"
+					},
+					"response": []
+				},
+				{
+					"name": "Create PDF",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9010/createPdf?ticker=NASDAQ:NVDA&mail=karl.lauterbach@thm.de&password=76452&start_date=01-01-2023&end_date=22-09-2023",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"createPdf"
+							],
+							"query": [
+								{
+									"key": "ticker",
+									"value": "NASDAQ:NVDA"
+								},
+								{
+									"key": "mail",
+									"value": "karl.lauterbach@thm.de"
+								},
+								{
+									"key": "password",
+									"value": "76452"
+								},
+								{
+									"key": "start_date",
+									"value": "01-01-2023"
+								},
+								{
+									"key": "end_date",
+									"value": "22-09-2023"
+								}
+							]
+						}
 					},
 					"response": []
 				}
@@ -288,7 +397,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:9050/checkUser?mail=karl.lauterbach@thm.de&password=1598abde",
+									"raw": "http://localhost:9050/checkUser?mail=karl.lauterbach@thm.de&password=76452",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -304,7 +413,7 @@
 										},
 										{
 											"key": "password",
-											"value": "1598abde"
+											"value": "76452"
 										}
 									]
 								}
@@ -493,12 +602,12 @@
 					"response": []
 				},
 				{
-					"name": "Create Graph",
+					"name": "Start Analysis / Create Graph",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9030/startAnalysis?ticker=NASDAQ:GOOGL",
+							"raw": "http://localhost:9030/startAnalysis?ticker=NASDAQ:NVDA",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -509,13 +618,38 @@
 							],
 							"query": [
 								{
-									"key": "ticker",
-									"value": "NASDAQ:GOOGL"
-								},
-								{
 									"key": "",
 									"value": null,
 									"disabled": true
+								},
+								{
+									"key": "ticker",
+									"value": "NASDAQ:NVDA"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Stock From Database",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9030/getStockFromDatabase?ticker=NASDAQ:NVDA",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9030",
+							"path": [
+								"getStockFromDatabase"
+							],
+							"query": [
+								{
+									"key": "ticker",
+									"value": "NASDAQ:NVDA"
 								}
 							]
 						}
@@ -528,30 +662,66 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9030/get_graphs?symbol=TSLA&date=2023-09-11&period=x",
+							"raw": "http://localhost:9030/getGraphs?file_name=Graphs/NASDAQ_NVDA__18_09_2023 16-00-00.png",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "9030",
 							"path": [
-								"get_graphs"
+								"getGraphs"
 							],
 							"query": [
 								{
-									"key": "symbol",
-									"value": "TSLA"
-								},
-								{
-									"key": "date",
-									"value": "2023-09-11"
-								},
-								{
-									"key": "period",
-									"value": "x"
+									"key": "file_name",
+									"value": "Graphs/NASDAQ_NVDA__18_09_2023 16-00-00.png"
 								}
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MailService",
+			"item": [
+				{
+					"name": "Create Mail with PDF",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "to",
+									"value": "timm.matins@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "subject",
+									"value": "Pdf test",
+									"type": "text"
+								},
+								{
+									"key": "text",
+									"value": "Hallo ich hoffe es klappt",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/timms/OneDrive/Desktop/NVDA_2023-09-22.pdf"
+								},
+								{
+									"key": "filename",
+									"value": "NVDA_2023-09-22.pdf",
+									"type": "text"
+								}
+							]
+						},
+						"url": "http://localhost:9020/mail/send"
 					},
 					"response": []
 				}
