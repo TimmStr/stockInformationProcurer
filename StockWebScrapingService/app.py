@@ -10,9 +10,11 @@ app = Flask(__name__)
 api = Api(app)
 app.config['JSON_SORT_KEYS'] = True
 
-# URL for Swagger UI
+"""
+Swagger config. The json file is available at "http://localhost:9040/swagger.json" while the official Swagger UI URL
+is available under "http://localhost:9040/api/docs/".
+"""
 SWAGGER_URL = '/api/docs'
-# Location of the swagger.json
 API_URL = 'http://localhost:9040/swagger.json'
 
 # Call factory function to create our blueprint
@@ -51,7 +53,6 @@ class GetKpisFromTicker(Resource):
     @api.expect(ticker_parameter)
     def get(self):
         request_values = request.values
-        print(request_values)
         if request_values.get('ticker') is not None:
             try:
                 return {"KPIs": get_kpis_as_dict(request.values.get('ticker'))}
