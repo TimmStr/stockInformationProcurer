@@ -1,3 +1,8 @@
+/**
+ * The MailConfig contains the authentication data for our mail account.
+ * This is a test email.
+ */
+
 package com.stockInformationProcurer;
 
 import org.springframework.context.annotation.Bean;
