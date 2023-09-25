@@ -106,8 +106,6 @@ public class UserController {
         List<User> users = userService.getAllUsers();
         for (User user : users) {
             if (user.getMail().equals(mail) && userService.verifyPassword(password, user.getPassword())) {
-                System.out.println(user.getMail() + " " + mail);
-                System.out.println(user.getPassword() + " " + password);
                 return new ResponseEntity<>(user, HttpStatus.OK);
             }
         }
