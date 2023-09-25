@@ -196,7 +196,10 @@ def draw_graph(ticker, dates, close_vals, low_vals, high_vals, volume_vals):
     plt.xlabel("Day")
     plt.ylabel("Price $")
     plt.legend()
-    plt.xticks(np.arange(0, len(dates), int(len(dates) / interval)), new_date_indices, rotation=30)
+    if len(dates) >= 16:
+        plt.xticks(np.arange(0, len(dates), int(len(dates) / interval)), new_date_indices, rotation=30)
+    else:
+        plt.xticks(new_date_indices)
     filename = get_filename(ticker, str(dates[-1]))
     plt.savefig(filename)
     filenames.append(filename)
@@ -208,7 +211,10 @@ def draw_graph(ticker, dates, close_vals, low_vals, high_vals, volume_vals):
     plt.xlabel("Day")
     plt.ylabel("Volume")
     plt.legend()
-    plt.xticks(np.arange(0, len(dates), int(len(dates) / 8)), new_date_indices, rotation=30)
+    if len(dates) >= 16:
+        plt.xticks(np.arange(0, len(dates), int(len(dates) / interval)), new_date_indices, rotation=30)
+    else:
+        plt.xticks(new_date_indices)
     filename = get_filename(ticker, str(dates[-1]), '_volume')
     plt.savefig(filename)
     filenames.append(filename)
