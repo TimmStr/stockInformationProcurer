@@ -14,7 +14,7 @@ def get_all_stocks_from_database():
     :return:
         Json response from StockWebScrapingService
     """
-    URL = STOCK_WEB_SCRAPING_SERVICE + 'get_all_stocks'
+    URL = STOCK_WEB_SCRAPING_SERVICE + 'getAllStocks'
     response = requests.get(URL)
     return response.json()
 
@@ -26,6 +26,6 @@ def stock_from_database(ticker):
     :return:
         Json response from StockWebScrapingService
     """
-    URL = STOCK_WEB_SCRAPING_SERVICE + 'get_stocks_from_database_with_ticker'
+    URL = STOCK_WEB_SCRAPING_SERVICE + 'getStocksFromDatabaseWithTicker'
     response = requests.get(URL, params=ticker)
     return response.json()

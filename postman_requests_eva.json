@@ -78,19 +78,19 @@
 					"response": []
 				},
 				{
-					"name": "Get KPIs",
+					"name": "Get KPIs From Ticker",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9040/get_kpis_from_ticker?ticker=NASDAQ:GOOGL",
+							"raw": "http://localhost:9040/getKpisFromTicker?ticker=NASDAQ:GOOGL",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "9040",
 							"path": [
-								"get_kpis_from_ticker"
+								"getKpisFromTicker"
 							],
 							"query": [
 								{
@@ -103,19 +103,19 @@
 					"response": []
 				},
 				{
-					"name": "Get Stock from symbol out ofMongo DB ",
+					"name": "Get Stock From Ticker From Mongo DB",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9040/get_stocks_from_database_with_ticker?ticker=NASDAQ:AAPL",
+							"raw": "http://localhost:9040/getStocksFromDatabaseWithTicker?ticker=NASDAQ:AAPL",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "9040",
 							"path": [
-								"get_stocks_from_database_with_ticker"
+								"getStocksFromDatabaseWithTicker"
 							],
 							"query": [
 								{
@@ -133,70 +133,12 @@
 			"name": "DocumentService",
 			"item": [
 				{
-					"name": "Get with Keycloak Authentification",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ6eHZ2a1JHRjJOdXRsTmJCUEw4U0tjcTcyV3ZkaDVwa3M0cUNLSlpyenNZIn0.eyJleHAiOjE2OTM3NjMzNTksImlhdCI6MTY5Mzc2MzA1OSwianRpIjoiODY4ZjFmY2ItOTk4Yy00MGI5LTk1ZmItMTMwNGVkN2E0ZjFjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL3N0b2NrLWluZm9ybWF0aW9uLXByb2N1cmVyIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImYwYjgzNDVhLWJjZTMtNDdiZS1hYjM5LTIwYjYyYWY1ODEzNCIsInR5cCI6IkJlYXJlciIsImF6cCI6ImRvY3VtZW50LXNlcnZpY2UiLCJzZXNzaW9uX3N0YXRlIjoiZWNmMjRiODYtNTI2Ny00N2ZhLWE5YjktNmIxMTQyM2QxNGY0IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXN0b2NrLWluZm9ybWF0aW9uLXByb2N1cmVyIiwib2ZmbGluZV9hY2Nlc3MiLCJhZG1pbiIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19LCJkb2N1bWVudC1zZXJ2aWNlIjp7InJvbGVzIjpbImNsaWVudF9hZG1pbiJdfX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsInNpZCI6ImVjZjI0Yjg2LTUyNjctNDdmYS1hOWI5LTZiMTE0MjNkMTRmNCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoidGltbSJ9.E4Lfigvk_M69mKIB02cDbZrET2G_5YGmrpSk7tKbMuvEF4pKaJ3S7T-Sg20lv7zweB5hpD-EofvBtKu4BtM2DyeJgvn_qyC52lotQgBiF6NgUQ-cg9dh4pnx2w7tKoa1hADbXwYxqkBzhZAHTqjPIzq7zJ1rjiTiZ7GBcxvJ9u73TZNcKcrrgO9ob1QFRA6wNspJqN_UUEupi6NeahsSkdx90A9PZCG5wkqn7qbU-LFpvXA6nBPqStJm1kh0z2PLe1J1kRPYfkx3AwNmEkF_CzmbwDLTNz331LVUHStzIR5rej8Rp_dt9w2dON8B_m73KhTgV9P0ek_S26kc8LD6DA"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": "http://localhost:9010/get"
-					},
-					"response": []
-				},
-				{
-					"name": "Get Documents",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:9010/documents?ticker=NASDAQ:NVDA",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "9010",
-							"path": [
-								"documents"
-							],
-							"query": [
-								{
-									"key": "ticker",
-									"value": "NASDAQ:NVDA"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post Document",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\":\"König von Deutschland\",\r\n    \"content\":\"Deutschland ist auf dem absteigenden Ast\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "http://localhost:9010/documents"
-					},
-					"response": []
-				},
-				{
 					"name": "Create PDF",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9010/createPdf?ticker=NASDAQ:NVDA&mail=karl.lauterbach@thm.de&password=76452&start_date=01-01-2023&end_date=22-09-2023",
+							"raw": "http://localhost:9010/createPdf?ticker=NASDAQ:NVDA&mail=karl.lauterbach@thm.de&password=76452&start_date=17-09-2023&end_date=24-09-2023",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -220,11 +162,11 @@
 								},
 								{
 									"key": "start_date",
-									"value": "01-01-2023"
+									"value": "17-09-2023"
 								},
 								{
 									"key": "end_date",
-									"value": "22-09-2023"
+									"value": "24-09-2023"
 								}
 							]
 						}
@@ -245,7 +187,7 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:9050/addUserStock?mail=karl.lauterbach@thm.de&password=1598abde&stockSymbol=GOOG",
+									"raw": "http://localhost:9050/addUserStock?mail=donqujiote98@gmail.com&password=1598abde&stockSymbol=AAPL",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -257,7 +199,7 @@
 									"query": [
 										{
 											"key": "mail",
-											"value": "karl.lauterbach@thm.de"
+											"value": "donqujiote98@gmail.com"
 										},
 										{
 											"key": "password",
@@ -265,7 +207,7 @@
 										},
 										{
 											"key": "stockSymbol",
-											"value": "GOOG"
+											"value": "AAPL"
 										}
 									]
 								}
@@ -349,7 +291,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:9050/getStocksForUser?mail=karl.lauterbach@thm.de&password=1598abde",
+									"raw": "http://localhost:9050/getStocksForUser?mail=karl.lauterbach@thm.de&password=76452",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -364,13 +306,13 @@
 											"value": "karl.lauterbach@thm.de"
 										},
 										{
-											"key": "password",
-											"value": "1598abde"
-										},
-										{
 											"key": "stockSymbol",
 											"value": "GOOG",
 											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "76452"
 										}
 									]
 								}
@@ -426,7 +368,7 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:9050/addUser?firstname=Karl&lastname=Lauterbach&mail=karl.lauterbach@thm.de&password=1598abde&mail_service=True",
+									"raw": "http://localhost:9050/addUser?firstname=Don&lastname=Quijote&mail=donqujiote98@gmail.com&password=1598abde&mail_service=True",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -438,15 +380,15 @@
 									"query": [
 										{
 											"key": "firstname",
-											"value": "Karl"
+											"value": "Don"
 										},
 										{
 											"key": "lastname",
-											"value": "Lauterbach"
+											"value": "Quijote"
 										},
 										{
 											"key": "mail",
-											"value": "karl.lauterbach@thm.de"
+											"value": "donqujiote98@gmail.com"
 										},
 										{
 											"key": "password",
@@ -590,24 +532,12 @@
 			"name": "StockAnalysisService",
 			"item": [
 				{
-					"name": "Mail Test",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": "http://localhost:9030/mail"
-					},
-					"response": []
-				},
-				{
 					"name": "Start Analysis / Create Graph",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9030/startAnalysis?ticker=NASDAQ:NVDA",
+							"raw": "http://localhost:9030/startAnalysis?ticker=NASDAQ:NVDA&mail=donqujiote98@gmail.com&password=1598abde",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -618,13 +548,16 @@
 							],
 							"query": [
 								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								},
-								{
 									"key": "ticker",
 									"value": "NASDAQ:NVDA"
+								},
+								{
+									"key": "mail",
+									"value": "donqujiote98@gmail.com"
+								},
+								{
+									"key": "password",
+									"value": "1598abde"
 								}
 							]
 						}
@@ -632,24 +565,28 @@
 					"response": []
 				},
 				{
-					"name": "Get Stock From Database",
+					"name": "Get Stocks From Database",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9030/getStockFromDatabase?ticker=NASDAQ:NVDA",
+							"raw": "http://localhost:9030/getStocksFromDatabase?mail=donqujiote98@gmail.com&password=1598abde",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "9030",
 							"path": [
-								"getStockFromDatabase"
+								"getStocksFromDatabase"
 							],
 							"query": [
 								{
-									"key": "ticker",
-									"value": "NASDAQ:NVDA"
+									"key": "mail",
+									"value": "donqujiote98@gmail.com"
+								},
+								{
+									"key": "password",
+									"value": "1598abde"
 								}
 							]
 						}
@@ -662,7 +599,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9030/getGraphs?file_name=Graphs/NASDAQ_NVDA__18_09_2023 16-00-00.png",
+							"raw": "http://localhost:9030/getGraphs?file_name=Graphs/NASDAQ_NVDA_2023-09-22.png&mail=donqujiote98@gmail.com&password=1598abde",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -674,7 +611,48 @@
 							"query": [
 								{
 									"key": "file_name",
-									"value": "Graphs/NASDAQ_NVDA__18_09_2023 16-00-00.png"
+									"value": "Graphs/NASDAQ_NVDA_2023-09-22.png"
+								},
+								{
+									"key": "mail",
+									"value": "donqujiote98@gmail.com"
+								},
+								{
+									"key": "password",
+									"value": "1598abde"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Stock From Database (Ticker)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9030/getStockFromDatabase?mail=donqujiote98@gmail.com&password=1598abde&ticker=NASDAQ:NVDA",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9030",
+							"path": [
+								"getStockFromDatabase"
+							],
+							"query": [
+								{
+									"key": "mail",
+									"value": "donqujiote98@gmail.com"
+								},
+								{
+									"key": "password",
+									"value": "1598abde"
+								},
+								{
+									"key": "ticker",
+									"value": "NASDAQ:NVDA"
 								}
 							]
 						}
@@ -701,7 +679,7 @@
 								},
 								{
 									"key": "subject",
-									"value": "Pdf test",
+									"value": "Pdf test98",
 									"type": "text"
 								},
 								{
@@ -721,56 +699,20 @@
 								}
 							]
 						},
-						"url": "http://localhost:9020/mail/send"
+						"url": "http://localhost:9020/mail/sendMail"
+					},
+					"response": []
+				},
+				{
+					"name": "Send Mails to All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9020/mail/sendMailToAllStocksForAllUsers"
 					},
 					"response": []
 				}
 			]
-		},
-		{
-			"name": "Document Get Welcome",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://127.0.0.1:9010/get"
-			},
-			"response": []
-		},
-		{
-			"name": "Mail Get Welcome",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://localhost:9020/get"
-			},
-			"response": []
-		},
-		{
-			"name": "Stock Analysis Get Welcome",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://localhost:9030/get"
-			},
-			"response": []
-		},
-		{
-			"name": "Stock Web Scraping Get Welcome",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://localhost:9040/get"
-			},
-			"response": []
-		},
-		{
-			"name": "User Service Get Welcome",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://localhost:9050/get"
-			},
-			"response": []
 		}
 	]
 }

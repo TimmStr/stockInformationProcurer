@@ -90,7 +90,8 @@ def get_stock_from_mongo_db(ticker):
         return dumps(as_dict)
     else:
         save_stock_in_database(ticker)
-        get_stock_from_mongo_db(ticker)
+        return get_stock_from_mongo_db(ticker)
+
 
 
 def delete_all_stocks_from_mongo_db():

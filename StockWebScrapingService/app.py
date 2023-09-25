@@ -126,7 +126,7 @@ class GetStocksFromDatabaseWithTicker(Resource):
         :return:
             dict if call of the "get_stock_from_mongo_db" function was successful
             dict {"Successful":"False", "Error":"..."} if function call was not successful
-            str if Tickersymbol is None
+            str if tickersymbol is None
         """
         if request.values.get('ticker') is not None:
             try:
