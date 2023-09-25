@@ -1,0 +1,5 @@
+com.stockInformationProcurer
+com.stockInformationProcurer.controller
+com.stockInformationProcurer.entity
+com.stockInformationProcurer.repository
+com.stockInformationProcurer.services

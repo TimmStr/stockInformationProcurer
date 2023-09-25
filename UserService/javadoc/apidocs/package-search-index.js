@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.stockInformationProcurer"},{"l":"com.stockInformationProcurer.controller"},{"l":"com.stockInformationProcurer.entity"},{"l":"com.stockInformationProcurer.repository"},{"l":"com.stockInformationProcurer.services"}];updateSearchResults();

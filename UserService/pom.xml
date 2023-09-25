@@ -100,6 +100,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
+                    <reportOutputDirectory>${project.basedir}/javadoc</reportOutputDirectory>
                 </configuration>
             </plugin>
         </plugins>
