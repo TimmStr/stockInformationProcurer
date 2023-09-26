@@ -2,7 +2,7 @@
  * The `MailService` class is responsible for sending emails with attachments.
  * It uses the JavaMailSender to send emails using the configured mail server.
  */
-package com.stockInformationProcurer.controller;
+package com.stockInformationProcurer.services;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;

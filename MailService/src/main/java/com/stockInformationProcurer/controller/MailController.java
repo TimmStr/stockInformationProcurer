@@ -8,6 +8,7 @@
 package com.stockInformationProcurer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.stockInformationProcurer.services.MailService;
 import com.stockInformationProcurer.services.UserServiceConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
