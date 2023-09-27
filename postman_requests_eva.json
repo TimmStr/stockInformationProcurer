@@ -138,7 +138,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9010/createPdf?ticker=NASDAQ:NVDA&mail=karl.lauterbach@thm.de&password=76452&start_date=17-09-2023&end_date=24-09-2023",
+							"raw": "http://localhost:9010/createPdf?ticker=NASDAQ:NVDA&mail=karl.lauterbach@thm.de&password=76452&start_date=21-09-2020&end_date=24-09-2023",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -162,7 +162,7 @@
 								},
 								{
 									"key": "start_date",
-									"value": "17-09-2023"
+									"value": "21-09-2020"
 								},
 								{
 									"key": "end_date",
@@ -207,7 +207,7 @@
 										},
 										{
 											"key": "stockSymbol",
-											"value": "AAPL"
+											"value": "NASDAQ:NVDA"
 										}
 									]
 								}
@@ -537,7 +537,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9030/startAnalysis?ticker=NASDAQ:NVDA&mail=donqujiote98@gmail.com&password=1598abde",
+							"raw": "http://localhost:9030/startAnalysis?ticker=NASDAQ:NVDA&mail=donqujiote98@gmail.com&password=1598abde&start_date=01-05-2023&end_date=28-09-2023",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -558,6 +558,14 @@
 								{
 									"key": "password",
 									"value": "1598abde"
+								},
+								{
+									"key": "start_date",
+									"value": "01-05-2023"
+								},
+								{
+									"key": "end_date",
+									"value": "28-09-2023"
 								}
 							]
 						}
@@ -599,7 +607,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9030/getGraphs?file_name=Graphs/NASDAQ_NVDA_2023-09-22.png&mail=donqujiote98@gmail.com&password=1598abde",
+							"raw": "http://localhost:9030/getGraphs?file_name=Graphs/NASDAQ_NVDA_2023-09-25.png&mail=donqujiote98@gmail.com&password=1598abde",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -611,7 +619,7 @@
 							"query": [
 								{
 									"key": "file_name",
-									"value": "Graphs/NASDAQ_NVDA_2023-09-22.png"
+									"value": "Graphs/NASDAQ_NVDA_2023-09-25.png"
 								},
 								{
 									"key": "mail",
@@ -690,7 +698,7 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/timms/OneDrive/Desktop/NVDA_2023-09-22.pdf"
+									"src": "/C:/Users/timms/OneDrive/Desktop/NVDA_2023-09-22 1 Jahr.pdf"
 								},
 								{
 									"key": "filename",
