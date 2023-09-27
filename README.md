@@ -1,35 +1,24 @@
-Postgresql Connection over IntelliJ:
-Host: localhost
-Port: 5432
-Authentication: User & Password
-User: keycloak
-Password: password
-Database: keycloak
-URL: jdbc:postgresql://localhost:5432/keycloak
+Swagger URLs:
+
+    DocumentService: http://localhost:9010/api/docs/
+    MailService: http://localhost:9020/swagger-ui/index.html
+    StockAnalysisService: http://localhost:9030/api/docs/
+    StockWebScrapingService: http://localhost:9040/api/docs/
+    UserService: http://localhost:9050/swagger-ui/index.html
 
 
 
-POSTGRES SQL Konfiguration:
-CREATE DATABASE users;
+Java Docs:
+    
+    MailService: MailService/javadoc/index.html
+    UserService: UserService/javadoc/index.html
 
-grant all privileges on database keycloak to keycloak;
+PostgreSQL Connection over IntelliJ/PyCharm:
 
-
-Create TABLE user_table(
-    ID SERIAL,
-    FIRSTNAME TEXT NOT NULL,
-    LASTNAME TEXT NOT NULL,
-    MAIL TEXT PRIMARY KEY NOT NULL,
-    PASSWORD TEXT NOT NULL,
-    MAIL_SERVICE BOOLEAN NOT NULL
-);
-
-
-Create TABLE user_stocks(
-    ID SERIAL,
-    MAIL TEXT NOT NULL,
-    STOCK_SYMBOL TEXT NOT NULL,
-    CONSTRAINT FK_MAIL
-                        FOREIGN KEY(mail)
-                        REFERENCES user_table(mail)
-);
+    Host: localhost
+    Port: 5432
+    Authentication: User & Password
+    User: keycloak
+    Password: password
+    Database: users
+    URL: jdbc:postgresql://localhost:5432/users
